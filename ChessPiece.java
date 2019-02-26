@@ -1,4 +1,4 @@
-package Project3;
+package ChessPrj;
 
 public abstract class ChessPiece implements IChessPiece {
 

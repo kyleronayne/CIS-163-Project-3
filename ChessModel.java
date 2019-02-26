@@ -1,4 +1,4 @@
-package Project3;
+package ChessPrj;
 
 public class ChessModel implements IChessModel {
     private IChessPiece[][] board;

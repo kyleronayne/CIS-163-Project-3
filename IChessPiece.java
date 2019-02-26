@@ -1,4 +1,4 @@
-package Project3;
+package ChessPrj;
 
 public interface IChessPiece {
     /**
@@ -25,8 +25,8 @@ public interface IChessPiece {
      * {@code this} object must be the piece at location {@code [move.fromRow, move.fromColumn]}.
      * (This method makes no sense otherwise.)
      *
-     * @param move  a {@link W18project3.Move} object describing the move to be made.
-     * @param board the {@link W18project3.IChessBoard} in which this piece resides.
+     * @param move  a {@link ChessPrj.Move} object describing the move to be made.
+     * @param board the {@link} in which this piece resides.
      * @return {@code true} if the proposed move is valid, {@code false} otherwise.
      * @throws IndexOutOfBoundsException if either {@code [move.fromRow, move.fromColumn]} or {@code [move.toRow,
      *                                   move.toColumn]} don't represent valid locations on the board.

@@ -1,4 +1,4 @@
-package Project3;
+package ChessPrj;
 
 import java.awt.*;
 import java.awt.event.*;

@@ -1,4 +1,4 @@
-package Project3;
+package ChessPrj;
 
 public class Move {
     public int fromRow, fromColumn, toRow, toColumn;

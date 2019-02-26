@@ -1,4 +1,4 @@
-package Project3;
+package ChessPrj;
 
 public enum GUIcodes {
     NoMessage, NotYourTurn, inCheck, Checkmate
