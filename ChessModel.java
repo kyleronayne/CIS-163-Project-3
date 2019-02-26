@@ -1,5 +1,5 @@
 package ChessPrj;
-
+/**SEE IF THIS SHOWS UP*/
 public class ChessModel implements IChessModel {
     private IChessPiece[][] board;
     private Player player;
