@@ -11,7 +11,7 @@ public class King extends ChessPiece {
     }
 
     public boolean isValidMove(Move move, IChessPiece[][] board) {
-        boolean valid = true;
+        boolean valid = false;
         // More code is needed
         return valid;
     }

@@ -15,18 +15,21 @@ public abstract class ChessPiece implements IChessPiece {
     }
 
     public boolean isValidMove(Move move, IChessPiece[][] board) {
-        boolean valid = false;
-
         //Verifies that starting and ending locations are different
         if (((move.fromRow == move.toRow) &&
                 (move.fromColumn == move.toColumn)) == true)
             return false;
-        else if(!(board[move.fromRow][move.fromColumn].type().equals(this.type())))
+        //Verifies that the piece is in the position its moving from
+        else if(!(board[move.fromRow][move.fromColumn].type().equals(
+                this.type())))
+            return false;
+        //Verifies that the piece is not moving to a spot occupied
+        //by the same player
+        else if((board[move.toRow][move.toColumn].player().equals(
+                this.player())))
             return false;
 
-
-
-
-        return false;
+        //If none of the above are true, the move is valid
+        return true;
     }
 }

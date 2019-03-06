@@ -11,8 +11,8 @@ public class Bishop extends ChessPiece {
     }
 
     public boolean isValidMove(Move move, IChessPiece[][] board) {
-
-        return true;
+        boolean valid = false;
+        return valid;
         // More code is needed
 
     }

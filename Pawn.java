@@ -13,8 +13,21 @@ public class Pawn extends ChessPiece {
     // determines if the move is valid for a pawn piece
     public boolean isValidMove(Move move, IChessPiece[][] board) {
 
-        boolean valid = true;
-        // More code is needed
-        return valid;
+        boolean superValid = super.isValidMove(move, board);
+        boolean valid = false;
+        //FIXME: Add functionality for capturing pieces and moving rows
+        //FIXME: Add functionality to determine forward/backward movement
+        if(((move.toRow==(move.fromRow+1)) ||
+                (move.toRow==(move.fromRow-1))) &&
+                (move.toColumn != move.fromColumn))
+            valid = true;
+        if(((move.toColumn == (move.fromColumn+1)) ||
+                (move.toColumn == (move.fromColumn-1))) &&
+                ((move.toRow==(move.fromRow+1)) ||
+                (move.toRow==(move.fromRow-1))) &&
+                (board[move.toRow][move.toColumn].player().equals(
+                        this.player())))
+            valid = true;
+        return valid&&superValid;
     }
 }
