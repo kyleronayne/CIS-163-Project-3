@@ -38,11 +38,12 @@ public class ChessModel implements IChessModel {
         return valid;
     }
 
+    //FIXME: Should this be the same as the move in the chess piece class?
     public boolean isValidMove(Move move) {
         boolean valid = false;
 
         if (board[move.fromRow][move.fromColumn] != null)
-            return (board[move.fromRow][move.fromColumn].isValidMove(move, board));
+            valid = (board[move.fromRow][move.fromColumn].isValidMove(move, board));
 
         return valid;
     }

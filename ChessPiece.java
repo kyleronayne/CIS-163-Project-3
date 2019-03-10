@@ -28,12 +28,18 @@ public abstract class ChessPiece implements IChessPiece {
             throw new IllegalArgumentException();
         //Verifies that the piece is not moving to a spot occupied
         //by the same player
-        else if((board[move.toRow][move.toColumn].player().equals(
-                this.player())))
-            return false;
         else if((move.toRow > boardSize-1) || (move.toRow < 0) ||
                 (move.toColumn > boardSize-1) || (move.toColumn < 0))
             throw new IndexOutOfBoundsException();
+        try {
+             if ((board[move.toRow][move.toColumn].player().equals(
+                    this.player())))
+                return false;
+        }
+        catch(NullPointerException e){
+
+        }
+
         //If none of the above are true, the move is valid
         return true;
     }
