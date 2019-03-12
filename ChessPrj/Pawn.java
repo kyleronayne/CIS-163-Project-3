@@ -14,33 +14,58 @@ public class Pawn extends ChessPiece {
     public boolean isValidMove(Move move, IChessPiece[][] board) {
 
         boolean superValid = super.isValidMove(move, board);
-        boolean valid = false;
-        //FIXME: Add functionality for capturing pieces and moving rows
-        //FIXME: Add functionality to determine forward/backward movement
-        if(this.player() == Player.WHITE)   {
+        boolean validMove = false;
+
+
+        if (this.player() == Player.WHITE) {
             if (move.fromRow == 6 && move.toRow == move.fromRow - 2) {
-                valid = true;
+                if (board[move.fromRow + 1][move.fromColumn].type()
+                        .equals(null)) {
+                    validMove = true;
+                }
             }
 
-            if((move.toRow == (move.fromRow - 1)) && (move.toColumn == move.fromColumn))
-                valid = true;
-            else if((move.toRow == (move.fromRow-1)) && ((move.toColumn == move.fromColumn+1) || (move.toColumn == move.fromColumn-1)))
-                try{
-                    if(board[move.toRow][move.toColumn].player() == Player.BLACK)
-                        valid = true;
+            if ((move.toRow == (move.fromRow - 1)) && (move.toColumn ==
+                    move.fromColumn)) {
+                if (board[move.fromRow + 1][move.fromColumn].type().
+                        equals(null)) {
+                    validMove = true;
+                }
+            }
+        }
+        else if ((move.toRow == (move.fromRow - 1)) &&
+                ((move.toColumn == move.fromColumn + 1) ||
+                        (move.toColumn == move.fromColumn - 1))) {
+                try {
+                    if(board[move.toRow][move.toColumn].player() ==
+                            Player.BLACK) {
+                        validMove = true;
+                    }
                 }
                 catch(NullPointerException e){}
         }
+
         if(this.player() == Player.BLACK)   {
-            if((move.toRow == (move.fromRow + 1)) && (move.toColumn == move.fromColumn))
-                valid = true;
+            if (move.fromRow == 1 && move.toRow == move.fromRow + 2) {
+                validMove = true;
+            }
+
+            if ((move.toRow == (move.fromRow - 1)) && (move.toColumn ==
+                    move.fromColumn)) {
+                if (board[move.fromRow + 1][move.fromColumn].type().
+                        equals(null)) {
+                    validMove = true;
+                }
+            }
+
             else if((move.toRow == (move.fromRow+1)) && ((move.toColumn == move.fromColumn+1) || (move.toColumn == move.fromColumn-1)))
                 try{
                     if(board[move.toRow][move.toColumn].player() == Player.WHITE)
-                        valid = true;
+                        validMove = true;
                 }
                 catch(NullPointerException e){}
         }
-        return valid&&superValid;
+
+        return validMove&&superValid;
     }
 }

@@ -16,8 +16,9 @@ public class Rook extends ChessPiece {
         boolean superValid = super.isValidMove(move, board);
         boolean valid = false;
         if((move.toColumn == move.fromColumn) ||
-                (move.toRow == move.fromRow))
+                (move.toRow == move.fromRow)) {
             valid = true;
+        }
         // More code is needed
         return valid&&superValid;
 
