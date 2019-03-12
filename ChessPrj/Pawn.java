@@ -18,6 +18,10 @@ public class Pawn extends ChessPiece {
         //FIXME: Add functionality for capturing pieces and moving rows
         //FIXME: Add functionality to determine forward/backward movement
         if(this.player() == Player.WHITE)   {
+            if (move.fromRow == 6 && move.toRow == move.fromRow - 2) {
+                valid = true;
+            }
+
             if((move.toRow == (move.fromRow - 1)) && (move.toColumn == move.fromColumn))
                 valid = true;
             else if((move.toRow == (move.fromRow-1)) && ((move.toColumn == move.fromColumn+1) || (move.toColumn == move.fromColumn-1)))
