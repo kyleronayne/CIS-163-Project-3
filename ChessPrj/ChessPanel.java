@@ -32,6 +32,7 @@ public class ChessPanel extends JPanel {
     private int toRow;
     private int fromCol;
     private int toCol;
+    private Player currentPlayer = Player.WHITE;
     // declare other instance variables as needed
 
     private listener listener;
@@ -207,11 +208,13 @@ public class ChessPanel extends JPanel {
             for (int r = 0; r < model.numRows(); r++)
                 for (int c = 0; c < model.numColumns(); c++)
                     if (board[r][c] == event.getSource())
-                        if (firstTurnFlag == true) {
+                        if (firstTurnFlag) {
                             if(model.pieceAt(r, c) != null) {
-                                fromRow = r;
-                                fromCol = c;
-                                firstTurnFlag = false;
+                                if(model.pieceAt(r,c).player() == currentPlayer) {
+                                    fromRow = r;
+                                    fromCol = c;
+                                    firstTurnFlag = false;
+                                }
                             }
                         } else {
                             toRow = r;
@@ -221,6 +224,7 @@ public class ChessPanel extends JPanel {
                             if ((model.isValidMove(m)) == true) {
                                 model.move(m);
                                 displayBoard();
+                                currentPlayer = currentPlayer.next();
                             }
                         }
         }
