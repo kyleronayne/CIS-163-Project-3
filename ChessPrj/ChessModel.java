@@ -37,6 +37,7 @@ public class ChessModel implements IChessModel {
 
     public boolean isComplete() {
         boolean valid = false;
+
         return valid;
     }
 
