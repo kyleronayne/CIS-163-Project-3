@@ -21,7 +21,7 @@ public abstract class ChessPiece implements IChessPiece {
                 (move.fromColumn == move.toColumn)) == true)
             return false;
         //Verifies that the piece is in the position its moving from
-
+        //FIXME: NEED TO DOUBLE CHECK FOR INVALID ARGUMENT
         //Verifies that the piece is not moving to a spot occupied
         //by the same player
         else if((move.toRow > boardSize-1) || (move.toRow < 0) ||
