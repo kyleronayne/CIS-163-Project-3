@@ -18,24 +18,24 @@ public class Pawn extends ChessPiece {
 
 
         if (this.player() == Player.WHITE) {
-            if (move.fromRow == 6 && move.toRow == move.fromRow - 2) {
-                if (board[move.fromRow + 1][move.fromColumn].type()
-                        .equals(null)) {
+            if (move.fromRow == 6 && move.toRow == move.fromRow - 2 &&
+                    move.toColumn == move.fromColumn) {
+                if (board[move.fromRow - 1][move.toColumn] == null
+                        && board[move.fromRow - 2][move.toColumn]
+                        == null) {
                     validMove = true;
                 }
             }
 
-            if ((move.toRow == (move.fromRow - 1)) && (move.toColumn ==
+            if ((move.toRow == move.fromRow - 1) && (move.toColumn ==
                     move.fromColumn)) {
-                if (board[move.fromRow + 1][move.fromColumn].type().
-                        equals(null)) {
+                if (board[move.toRow][move.toColumn] == null) {
                     validMove = true;
                 }
             }
-        }
-        else if ((move.toRow == (move.fromRow - 1)) &&
-                ((move.toColumn == move.fromColumn + 1) ||
-                        (move.toColumn == move.fromColumn - 1))) {
+            else if ((move.toRow == move.fromRow - 1) &&
+                    (move.toColumn == move.fromColumn + 1) ||
+                    (move.toColumn == move.fromColumn - 1)) {
                 try {
                     if(board[move.toRow][move.toColumn].player() ==
                             Player.BLACK) {
@@ -43,27 +43,36 @@ public class Pawn extends ChessPiece {
                     }
                 }
                 catch(NullPointerException e){}
+            }
         }
 
-        if(this.player() == Player.BLACK)   {
-            if (move.fromRow == 1 && move.toRow == move.fromRow + 2) {
-                validMove = true;
-            }
 
-            if ((move.toRow == (move.fromRow - 1)) && (move.toColumn ==
-                    move.fromColumn)) {
-                if (board[move.fromRow + 1][move.fromColumn].type().
-                        equals(null)) {
+        if (this.player() == Player.BLACK)   {
+            if ((move.fromRow == 1) && (move.toRow == move.fromRow + 2)
+                    && (move.toColumn == move.fromColumn)) {
+                if ((board[move.fromRow + 1][move.toColumn] == null) &&
+                        board[move.fromRow + 2][move.fromColumn] == null) {
                     validMove = true;
                 }
             }
 
-            else if((move.toRow == (move.fromRow+1)) && ((move.toColumn == move.fromColumn+1) || (move.toColumn == move.fromColumn-1)))
-                try{
-                    if(board[move.toRow][move.toColumn].player() == Player.WHITE)
+            if ((move.toRow == move.fromRow + 1) && (move.toColumn ==
+                    move.fromColumn)) {
+                if (board[move.toRow][move.toColumn] == null) {
+                    validMove = true;
+                }
+            }
+
+            else if ((move.toRow == move.fromRow + 1) &&
+                    (move.toColumn == move.fromColumn + 1)
+                    || (move.toColumn == move.fromColumn - 1)) {
+                try {
+                    if (board[move.toRow][move.toColumn].player() ==
+                            Player.WHITE)
                         validMove = true;
                 }
-                catch(NullPointerException e){}
+                catch (NullPointerException e) {}
+            }
         }
 
         return validMove&&superValid;
