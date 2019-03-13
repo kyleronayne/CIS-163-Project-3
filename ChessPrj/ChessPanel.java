@@ -208,11 +208,9 @@ public class ChessPanel extends JPanel {
                 for (int c = 0; c < model.numColumns(); c++)
                     if (board[r][c] == event.getSource())
                         if (firstTurnFlag == true) {
-                            if(model.pieceAt(r, c) != null) {
-                                fromRow = r;
-                                fromCol = c;
-                                firstTurnFlag = false;
-                            }
+                            fromRow = r;
+                            fromCol = c;
+                            firstTurnFlag = false;
                         } else {
                             toRow = r;
                             toCol = c;
