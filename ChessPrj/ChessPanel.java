@@ -225,6 +225,7 @@ public class ChessPanel extends JPanel {
                                 model.move(m);
                                 displayBoard();
                                 currentPlayer = currentPlayer.next();
+                                model.inCheck(currentPlayer);
                             }
                         }
         }

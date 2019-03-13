@@ -34,8 +34,8 @@ public class Pawn extends ChessPiece {
                 }
             }
             else if ((move.toRow == move.fromRow - 1) &&
-                    (move.toColumn == move.fromColumn + 1) ||
-                    (move.toColumn == move.fromColumn - 1)) {
+                    ((move.toColumn == move.fromColumn + 1) ||
+                    (move.toColumn == move.fromColumn - 1))) {
                 try {
                     if(board[move.toRow][move.toColumn].player() ==
                             Player.BLACK) {
@@ -64,8 +64,8 @@ public class Pawn extends ChessPiece {
             }
 
             else if ((move.toRow == move.fromRow + 1) &&
-                    (move.toColumn == move.fromColumn + 1)
-                    || (move.toColumn == move.fromColumn - 1)) {
+                    ((move.toColumn == move.fromColumn + 1)
+                    || (move.toColumn == move.fromColumn - 1))) {
                 try {
                     if (board[move.toRow][move.toColumn].player() ==
                             Player.WHITE)

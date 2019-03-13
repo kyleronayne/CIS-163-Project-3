@@ -3,6 +3,7 @@ package ChessPrj;
 public class ChessModel implements IChessModel {
     private IChessPiece[][] board;
     private Player player;
+    private GUIcodes gameStatus;
 
     // declare other instance variables as needed
 
@@ -31,6 +32,7 @@ public class ChessModel implements IChessModel {
             board[6][i] = new Pawn(Player.WHITE);
             board[1][i] = new Pawn(Player.BLACK);
         }
+        gameStatus = GUIcodes.NoMessage;
     }
 
     public boolean isComplete() {
@@ -53,8 +55,37 @@ public class ChessModel implements IChessModel {
     }
 
     public boolean inCheck(Player p) {
-        boolean valid = false;
-        return valid;
+        int kingRow = -1;
+        int kingCol = -1;
+
+
+        for(int r=0; r<numRows(); r++)
+            for(int c=0; c<numColumns(); c++)
+                if(pieceAt(r, c) != null)
+                    if(pieceAt(r, c).type().equals("King")) {
+                        if (pieceAt(r, c).player() == p) {
+                            kingRow = r;
+                            kingCol = c;
+                            System.out.println(r);
+                            System.out.println(c);
+                        }
+                    }
+
+        for(int r=0; r<numRows(); r++)
+            for(int c=0; c<numColumns(); c++)
+                if(pieceAt(r, c) != null) {
+                    if (pieceAt(r, c).player() == p.next()) {
+                        Move move = new Move(r, c, kingRow, kingCol);
+                        if (pieceAt(r, c).isValidMove(move, board)) {
+                            gameStatus = GUIcodes.inCheck;
+                            System.out.println("CHECK");
+                            return true;
+                        }
+                    }
+                }
+
+
+        return false;
     }
 
 
