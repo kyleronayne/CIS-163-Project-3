@@ -38,7 +38,6 @@ public class ChessModel implements IChessModel {
         return valid;
     }
 
-    //FIXME: Should this be the same as the move in the chess piece class?
     public boolean isValidMove(Move move) {
         boolean valid = false;
 
