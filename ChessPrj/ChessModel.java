@@ -57,6 +57,9 @@ public class ChessModel implements IChessModel {
     public boolean inCheck(Player p) {
         int kingRow = -1;
         int kingCol = -1;
+        // Replace kingCaptured boolean with checkmate method when
+        // finished
+        boolean kingCaptured = true;
 
 
         for(int r=0; r<numRows(); r++)
@@ -64,6 +67,7 @@ public class ChessModel implements IChessModel {
                 if(pieceAt(r, c) != null)
                     if(pieceAt(r, c).type().equals("King")) {
                         if (pieceAt(r, c).player() == p) {
+                            kingCaptured = false;
                             kingRow = r;
                             kingCol = c;
                             System.out.println(r);
@@ -75,11 +79,13 @@ public class ChessModel implements IChessModel {
             for(int c=0; c<numColumns(); c++)
                 if(pieceAt(r, c) != null) {
                     if (pieceAt(r, c).player() == p.next()) {
-                        Move move = new Move(r, c, kingRow, kingCol);
-                        if (pieceAt(r, c).isValidMove(move, board)) {
-                            gameStatus = GUIcodes.inCheck;
-                            System.out.println("CHECK");
-                            return true;
+                        if (!(kingCaptured)) {
+                            Move move = new Move(r, c, kingRow, kingCol);
+                            if (pieceAt(r, c).isValidMove(move, board)) {
+                                gameStatus = GUIcodes.inCheck;
+                                System.out.println("CHECK");
+                                return true;
+                            }
                         }
                     }
                 }

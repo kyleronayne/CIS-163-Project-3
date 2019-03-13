@@ -225,7 +225,11 @@ public class ChessPanel extends JPanel {
                                 model.move(m);
                                 displayBoard();
                                 currentPlayer = currentPlayer.next();
-                                model.inCheck(currentPlayer);
+                                if (model.inCheck(currentPlayer)) {
+                                    JOptionPane.showMessageDialog(null,
+                                            currentPlayer +
+                                                    " Is In Check!");
+                                }
                             }
                         }
         }
