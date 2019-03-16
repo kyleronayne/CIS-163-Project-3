@@ -1,5 +1,5 @@
 package ChessPrj;
-//UPDATE UPDATE UPDATE
+
 public class ChessModel implements IChessModel {
     private IChessPiece[][] board;
     private Player player;
@@ -71,10 +71,34 @@ public class ChessModel implements IChessModel {
                             kingCaptured = false;
                             kingRow = r;
                             kingCol = c;
-                            System.out.println(r);
-                            System.out.println(c);
                         }
                     }
+
+        for(int r=0; r<numRows(); r++)
+            for(int c=0; c<numColumns(); c++)
+                if(pieceAt(r, c) != null) {
+                    if (pieceAt(r, c).player() == p.next()) {
+                        if (!(kingCaptured)) {
+                            Move move = new Move(r, c, kingRow, kingCol);
+                            if (pieceAt(r, c).isValidMove(move, board)) {
+                                gameStatus = GUIcodes.inCheck;
+                                System.out.println("CHECK");
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+
+        return false;
+    }
+
+    public boolean inCheck(Player p, int row, int col) {
+        int kingRow = row;
+        int kingCol = col;
+        // Replace kingCaptured boolean with checkmate method when
+        // finished
+        boolean kingCaptured = true;
 
         for(int r=0; r<numRows(); r++)
             for(int c=0; c<numColumns(); c++)

@@ -4,6 +4,10 @@ public abstract class ChessPiece implements IChessPiece {
 
     private Player owner;
     private int boardSize = 8;
+    private int wKingRow;
+    private int wKingCol;
+    private int bKingRow;
+    private int bKingCol;
 
     protected ChessPiece(Player player) {
         this.owner = player;
@@ -20,10 +24,8 @@ public abstract class ChessPiece implements IChessPiece {
         if (((move.fromRow == move.toRow) &&
                 (move.fromColumn == move.toColumn)) == true)
             return false;
-        //Verifies that the piece is in the position its moving from
         //FIXME: NEED TO DOUBLE CHECK FOR INVALID ARGUMENT
-        //Verifies that the piece is not moving to a spot occupied
-        //by the same player
+
         else if((move.toRow > boardSize-1) || (move.toRow < 0) ||
                 (move.toColumn > boardSize-1) || (move.toColumn < 0))
             throw new IndexOutOfBoundsException();
@@ -35,6 +37,7 @@ public abstract class ChessPiece implements IChessPiece {
         catch(NullPointerException e){
 
         }
+
 
         //If none of the above are true, the move is valid
         return true;
