@@ -36,9 +36,32 @@ public class ChessModel implements IChessModel {
     }
 
     public boolean isComplete() {
-        boolean valid = false;
+        if (inCheck(currentPlayer())) {
+            for (int r = 0; r < numRows(); r++)
+                for (int c = 0; c < numColumns(); c++) {
+                    if (pieceAt(r, c).player() == currentPlayer()) {
+                        for (int x = 0; x < numRows(); x++)
+                            for (int y = 0; y < numColumns(); y++) {
+                                Move move = new Move(r, c, x, y);
+                                if (pieceAt(r, c).isValidMove(move, board)) {
+                                    move(move);
+                                    Move move2 = new Move(x, y, r, c);
+                                    if (inCheck(currentPlayer())) {
+                                        move(move2);
+                                    }
+                                    else {
+                                        move(move2);
+                                        return false;
+                                    }
+                                }
+                            }
+                    }
+                }
+        }
 
-        return valid;
+        gameStatus = GUIcodes.Checkmate;
+        System.out.println("CheckMate");
+        return true;
     }
 
     public boolean isValidMove(Move move) {
@@ -68,7 +91,7 @@ public class ChessModel implements IChessModel {
                 if(pieceAt(r, c) != null)
                     if(pieceAt(r, c).type().equals("King")) {
                         if (pieceAt(r, c).player() == p) {
-                            kingCaptured = false;
+                            //kingCaptured = false;
                             kingRow = r;
                             kingCol = c;
                         }
@@ -78,14 +101,14 @@ public class ChessModel implements IChessModel {
             for(int c=0; c<numColumns(); c++)
                 if(pieceAt(r, c) != null) {
                     if (pieceAt(r, c).player() == p.next()) {
-                        if (!(kingCaptured)) {
+                        //if (!(kingCaptured)) {
                             Move move = new Move(r, c, kingRow, kingCol);
                             if (pieceAt(r, c).isValidMove(move, board)) {
                                 gameStatus = GUIcodes.inCheck;
-                                System.out.println("CHECK");
+                               // System.out.println("CHECK");
                                 return true;
                             }
-                        }
+                        //}
                     }
                 }
 
@@ -104,14 +127,14 @@ public class ChessModel implements IChessModel {
             for(int c=0; c<numColumns(); c++)
                 if(pieceAt(r, c) != null) {
                     if (pieceAt(r, c).player() == p.next()) {
-                        if (!(kingCaptured)) {
+                       // if (!(kingCaptured)) {
                             Move move = new Move(r, c, kingRow, kingCol);
                             if (pieceAt(r, c).isValidMove(move, board)) {
                                 gameStatus = GUIcodes.inCheck;
-                                System.out.println("CHECK");
+                               // System.out.println("CHECK");
                                 return true;
                             }
-                        }
+                        //}
                     }
                 }
 
