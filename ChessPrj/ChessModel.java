@@ -4,6 +4,7 @@ public class ChessModel implements IChessModel {
     private IChessPiece[][] board;
     private Player player;
     private GUIcodes gameStatus;
+    private ChessPiece newPiece;
 
     // declare other instance variables as needed
 
@@ -35,30 +36,101 @@ public class ChessModel implements IChessModel {
         gameStatus = GUIcodes.NoMessage;
     }
 
+    //FIXME: Something ain't working right here
     public boolean isComplete() {
-        if (inCheck(currentPlayer())) {
-            for (int r = 0; r < numRows(); r++)
-                for (int c = 0; c < numColumns(); c++) {
-                    if (pieceAt(r, c).player() == currentPlayer()) {
-                        for (int x = 0; x < numRows(); x++)
-                            for (int y = 0; y < numColumns(); y++) {
-                                Move move = new Move(r, c, x, y);
-                                if (pieceAt(r, c).isValidMove(move, board)) {
-                                    move(move);
-                                    Move move2 = new Move(x, y, r, c);
-                                    if (inCheck(currentPlayer())) {
-                                        move(move2);
-                                    }
-                                    else {
-                                        move(move2);
-                                        return false;
-                                    }
+        if(currentPlayer() == Player.WHITE) {
+            for(int r=0; r<numRows(); r++)
+            for(int c=0; c<numColumns(); c++)
+                if((pieceAt(r, c) != null))
+                    if((pieceAt(r, c).player()==Player.WHITE))
+                    for(int x=0; x<numRows(); x++)
+                        for(int y=0; y<numColumns(); y++) {
+                            Move m = new Move(r, c, x, y);
+                            Move m2 = new Move(x, y, r, c);
+                            if(pieceAt(r, c).isValidMove(m, board))    {
+                                newPiece = null;
+                                if(pieceAt(x, y) != null)   {
+                                    //Want a new black piece
+                                    if(pieceAt(x, y).type().equals("King"))
+                                        newPiece = new King(Player.BLACK);
+                                    else if(pieceAt(x, y).type().equals("Queen"))
+                                        newPiece = new Queen(Player.BLACK);
+                                    else if(pieceAt(x, y).type().equals("Bishop"))
+                                        newPiece = new Bishop(Player.BLACK);
+                                    else if(pieceAt(x, y).type().equals("Knight"))
+                                        newPiece = new Knight(Player.BLACK);
+                                    else if(pieceAt(x, y).type().equals("Rook"))
+                                        newPiece = new Rook(Player.BLACK);
+                                    else if(pieceAt(x, y).type().equals("Pawn"))
+                                        newPiece = new Pawn(Player.BLACK);
+                                    else
+                                        newPiece = null;
                                 }
-                            }
-                    }
-                }
-        }
+                                move(m);
+                                if(inCheck(currentPlayer().next()))    {
+                                    System.out.println("Move back, Still in check");
+                                    move(m2);
+                                    board[x][y] = newPiece;
+                                }
+                                else    {
+                                    System.out.println("Move back, not completed.");
+                                    System.out.println(pieceAt(x, y).player() + " " + pieceAt(x, y).type());
+                                    move(m2);
+                                    board[x][y] = newPiece;
+                                    return false;
+                                }
 
+                            }
+                        }}
+        else {
+                        System.out.println("-------------------------------");
+                        System.out.println("You are currently the BLACK player");
+                        for (int r1 = 0; r1 < numRows(); r1++)
+                            for (int c1 = 0; c1 < numColumns(); c1++)
+                                if ((pieceAt(r1, c1) != null))
+                                    if ((pieceAt(r1, c1).player() == Player.BLACK)) {
+                                        System.out.println("You are the " + pieceAt(r1, c1).player() + " " + pieceAt(r1, c1).type());
+                                        for (int x = 0; x < numRows(); x++)
+                                            for (int y = 0; y < numColumns(); y++) {
+                                                Move m = new Move(r1, c1, x, y);
+                                                Move m2 = new Move(x, y, r1, c1);
+                                                if(pieceAt(r1, c1).isValidMove(m, board))    {
+                                                    newPiece = null;
+                                                    if(pieceAt(x, y) != null)   {
+                                                        //Want a new white piece
+                                                        if(pieceAt(x, y).type().equals("King"))
+                                                            newPiece = new King(Player.WHITE);
+                                                        else if(pieceAt(x, y).type().equals("Queen"))
+                                                            newPiece = new Queen(Player.WHITE);
+                                                        else if(pieceAt(x, y).type().equals("Bishop"))
+                                                            newPiece = new Bishop(Player.WHITE);
+                                                        else if(pieceAt(x, y).type().equals("Knight"))
+                                                            newPiece = new Knight(Player.WHITE);
+                                                        else if(pieceAt(x, y).type().equals("Rook"))
+                                                            newPiece = new Rook(Player.WHITE);
+                                                        else if(pieceAt(x, y).type().equals("Pawn"))
+                                                            newPiece = new Pawn(Player.WHITE);
+                                                        else
+                                                            newPiece = null;
+                                                    }
+                                                    move(m);
+                                                    if(inCheck(currentPlayer().next()))    {
+                                                        System.out.println("Move back, Still in check");
+                                                        move(m2);
+                                                        board[x][y] = newPiece;
+                                                    }
+                                                    else    {
+                                                        System.out.println("Move back, not completed.");
+                                                        System.out.println(pieceAt(x, y).player() + " " + pieceAt(x, y).type());
+                                                        move(m2);
+                                                        board[x][y] = newPiece;
+                                                        return false;
+                                                    }
+
+                                                }
+                                            }
+                                    }
+                    }
         gameStatus = GUIcodes.Checkmate;
         System.out.println("CheckMate");
         return true;
@@ -76,39 +148,37 @@ public class ChessModel implements IChessModel {
     public void move(Move move) {
         board[move.toRow][move.toColumn] =  board[move.fromRow][move.fromColumn];
         board[move.fromRow][move.fromColumn] = null;
+        player = player.next();
+        System.out.println("Model is switching to: " + player);
+
     }
 
     public boolean inCheck(Player p) {
-        int kingRow = -1;
+        int kingRow = -3;
         int kingCol = -1;
         // Replace kingCaptured boolean with checkmate method when
         // finished
-        boolean kingCaptured = true;
-
 
         for(int r=0; r<numRows(); r++)
             for(int c=0; c<numColumns(); c++)
                 if(pieceAt(r, c) != null)
-                    if(pieceAt(r, c).type().equals("King")) {
-                        if (pieceAt(r, c).player() == p) {
-                            //kingCaptured = false;
+                    if(pieceAt(r, c).player() == p)
+                        if(pieceAt(r, c).type().equals("King")){
                             kingRow = r;
                             kingCol = c;
+
                         }
-                    }
 
         for(int r=0; r<numRows(); r++)
             for(int c=0; c<numColumns(); c++)
                 if(pieceAt(r, c) != null) {
                     if (pieceAt(r, c).player() == p.next()) {
-                        //if (!(kingCaptured)) {
                             Move move = new Move(r, c, kingRow, kingCol);
                             if (pieceAt(r, c).isValidMove(move, board)) {
                                 gameStatus = GUIcodes.inCheck;
-                               // System.out.println("CHECK");
-                                return true;
+                                System.out.println(kingRow + " " + kingCol);
+                               return true;
                             }
-                        //}
                     }
                 }
 
@@ -121,20 +191,16 @@ public class ChessModel implements IChessModel {
         int kingCol = col;
         // Replace kingCaptured boolean with checkmate method when
         // finished
-        boolean kingCaptured = true;
 
         for(int r=0; r<numRows(); r++)
             for(int c=0; c<numColumns(); c++)
                 if(pieceAt(r, c) != null) {
                     if (pieceAt(r, c).player() == p.next()) {
-                       // if (!(kingCaptured)) {
                             Move move = new Move(r, c, kingRow, kingCol);
                             if (pieceAt(r, c).isValidMove(move, board)) {
                                 gameStatus = GUIcodes.inCheck;
-                               // System.out.println("CHECK");
                                 return true;
                             }
-                        //}
                     }
                 }
 

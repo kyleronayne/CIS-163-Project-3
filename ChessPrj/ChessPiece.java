@@ -22,13 +22,19 @@ public abstract class ChessPiece implements IChessPiece {
     public boolean isValidMove(Move move, IChessPiece[][] board) {
         //Verifies that starting and ending locations are different
         if (((move.fromRow == move.toRow) &&
-                (move.fromColumn == move.toColumn)) == true)
+                (move.fromColumn == move.toColumn)))
             return false;
         //FIXME: NEED TO DOUBLE CHECK FOR INVALID ARGUMENT
 
         else if((move.toRow > boardSize-1) || (move.toRow < 0) ||
-                (move.toColumn > boardSize-1) || (move.toColumn < 0))
-            throw new IndexOutOfBoundsException();
+                (move.toColumn > boardSize-1) || (move.toColumn < 0)) {
+            System.out.println(move.toRow +" "+ move.toColumn);
+            return false;
+            //FIXME: I think we need to throw an error but its not
+            //working currently
+            //throw new IndexOutOfBoundsException();
+
+        }
         try {
              if ((board[move.toRow][move.toColumn].player().equals(
                     this.player())))

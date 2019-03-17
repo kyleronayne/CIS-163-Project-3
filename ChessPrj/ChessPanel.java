@@ -33,7 +33,6 @@ public class ChessPanel extends JPanel {
     private int fromCol;
     private int toCol;
     private Player currentPlayer = Player.WHITE;
-    // declare other instance variables as needed
 
     private listener listener;
 
@@ -207,10 +206,10 @@ public class ChessPanel extends JPanel {
         public void actionPerformed(ActionEvent event) {
             for (int r = 0; r < model.numRows(); r++)
                 for (int c = 0; c < model.numColumns(); c++)
-                    if (board[r][c] == event.getSource())
+                    if (board[r][c] == event.getSource()) {
                         if (firstTurnFlag) {
-                            if(model.pieceAt(r, c) != null) {
-                                if(model.pieceAt(r,c).player() == currentPlayer) {
+                            if (model.pieceAt(r, c) != null) {
+                                if (model.pieceAt(r, c).player() == currentPlayer) {
                                     fromRow = r;
                                     fromCol = c;
                                     firstTurnFlag = false;
@@ -225,25 +224,32 @@ public class ChessPanel extends JPanel {
                                 int OgCol = fromCol;
                                 int OgRow = fromRow;
                                 model.move(m);
-                                if(model.inCheck(currentPlayer))    {
+                                if (model.inCheck(currentPlayer)) {
                                     Move newM = new Move(toRow, toCol, OgRow, OgCol);
                                     model.move(newM);
                                     return;
                                 }
+
                                 displayBoard();
-                                if (model.inCheck(currentPlayer)) {
-                                    JOptionPane.showMessageDialog(null,
-                                            currentPlayer +
-                                                    " Is In Check!");
-                                }
                                 currentPlayer = currentPlayer.next();
+                                System.out.println("Panel thinks: " + currentPlayer);
                                 if (model.inCheck(currentPlayer)) {
-                                    JOptionPane.showMessageDialog(null,
-                                            currentPlayer +
-                                                    " Is In Check!");
+                                    if (model.isComplete()) {
+                                        JOptionPane.showMessageDialog(null,
+                                                currentPlayer +
+                                                        " Has been CHECKMATED!\n" +
+                                                        "GAME OVER!");
+                                    } else {
+                                        JOptionPane.showMessageDialog(null,
+                                                currentPlayer +
+                                                        " Is In Check!\n" +
+                                                        "Next move must get out of check!");
+                                    }
                                 }
+
                             }
                         }
+                    }
         }
     }
 }
