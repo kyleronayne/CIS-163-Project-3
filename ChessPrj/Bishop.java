@@ -3,14 +3,32 @@ import java.lang.*;
 
 public class Bishop extends ChessPiece {
 
+    /******************************************************************
+     * Constructor calls the ChessPiece classes' constructor
+     * @param player A Player object
+     */
     public Bishop(Player player) {
         super(player);
     }
 
+
+    /******************************************************************
+     * Returns a String denoting the piece type
+     * @return A String denoting the piece type
+     */
     public String type() {
+
         return "Bishop";
     }
 
+    /******************************************************************
+     * Returns a boolean representing whether the specified Move is
+     * valid
+     * @param move A Move object representing a player's desired move
+     * @param board
+     * @return A boolean representing whether the specified Move is
+     * valid
+     */
     public boolean isValidMove(Move move, IChessPiece[][] board) {
         boolean superValid = super.isValidMove(move, board);
 
