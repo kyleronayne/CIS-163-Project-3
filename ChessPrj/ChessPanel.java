@@ -34,6 +34,7 @@ public class ChessPanel extends JPanel {
     private int fromCol;
     private int toCol;
     private Player currentPlayer = Player.WHITE;
+    private boolean en_passant = false;
 
     private listener listener;
 
@@ -207,7 +208,15 @@ public class ChessPanel extends JPanel {
 
     // inner class that represents action listener for buttons
     private class listener implements ActionListener {
+        //FIXME: Ask about adding firstMove to IChessPiece
         public void actionPerformed(ActionEvent event) {
+            for(int i=0; i<8; i++)
+                for(int j=0; j<8; j++)  {
+                    if(model.pieceAt(i, j) != null)
+                        if(model.pieceAt(i, j).player() == currentPlayer)
+                            model.pieceAt(i, j).setFirstMove(false);
+                }
+
             if(undo == event.getSource())   {
                 boolean isAtStart = model.goToLastBoard();
                 displayBoard();
@@ -235,10 +244,45 @@ public class ChessPanel extends JPanel {
                             firstTurnFlag = true;
                             Move m = new Move(fromRow, fromCol, toRow, toCol);
                             if ((model.isValidMove(m)) == true) {
+                                System.out.println("Here I am");
+                                if(model.pieceAt(fromRow, fromCol) != null) {
+                                    if (model.pieceAt(fromRow, fromCol).player() == Player.WHITE) {
+                                        if((toRow == 2) && (toRow == fromRow - 1) &&
+                                                ((toCol == fromCol+ 1) ||
+                                                        (toCol == fromCol - 1))) {
+                                            //if enPassant is legal
+                                            if (model.pieceAt(toRow + 1,toCol).getFirstMove()) {
+                                                en_passant = true;
+                                                Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                model.saveBoard();
+                                                model.move(enPassant);
+                                                m = new Move(fromRow, toCol, toRow, toCol);
+                                            }
+                                        }
+                                    }
+                                    else if(model.pieceAt(fromRow, fromCol) != null) {
+                                        if (model.pieceAt(fromRow, fromCol).player() == Player.BLACK) {
+                                            if ((toRow == 5) && (toRow == fromRow + 1) &&
+                                                    ((toCol == fromCol + 1) ||
+                                                            (toCol == fromCol - 1))) {
+                                                //if enPassant is legal
+                                                if (model.pieceAt(toRow - 1, toCol).getFirstMove()) {
+                                                    en_passant = true;
+                                                    Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                    model.saveBoard();
+                                                    model.move(enPassant);
+                                                    m = new Move(fromRow, toCol, toRow, toCol);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                                 int OgCol = fromCol;
                                 int OgRow = fromRow;
-                                model.saveBoard();
+                                if(!en_passant)
+                                    model.saveBoard();
                                 model.move(m);
+                                en_passant = false;
                                 if (model.inCheck(currentPlayer)) {
                                     Move newM = new Move(toRow, toCol, OgRow, OgCol);
                                     model.move(newM);

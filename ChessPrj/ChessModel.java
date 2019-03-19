@@ -233,7 +233,6 @@ public class ChessModel implements IChessModel {
     }
     //FIXME: If you move, then undo to beginning, then move, undo again, it will put you to the last spot...
     public boolean goToLastBoard() {
-        System.out.println(prevBoard.size());
         if(prevBoard.size()>1)  {
             board = prevBoard.get(prevBoard.size()-1);
             prevBoard.remove(prevBoard.size()-1);
@@ -241,7 +240,6 @@ public class ChessModel implements IChessModel {
             return false;
         }
         else {
-            System.out.println("Go to og board and it's WHITE turn");
             board = startBoard;
             player = Player.WHITE;
             prevBoard.clear();
