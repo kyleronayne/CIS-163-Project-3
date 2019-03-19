@@ -1,5 +1,5 @@
 package ChessPrj;
-
+//FIXME: en Passant Bug that allows the king to move into check immediately following enPassant
 public class Pawn extends ChessPiece {
 
     public Pawn(Player player) {
