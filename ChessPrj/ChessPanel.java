@@ -7,6 +7,7 @@ import javax.swing.*;
 public class ChessPanel extends JPanel {
 
     private JButton[][] board;
+    private JButton undo;
     private ChessModel model;
 
     private ImageIcon wRook;
@@ -60,8 +61,11 @@ public class ChessPanel extends JPanel {
                 boardpanel.add(board[r][c]);
             }
         }
+        undo = new JButton("Undo", null);
+        undo.addActionListener(listener);
         add(boardpanel, BorderLayout.WEST);
         boardpanel.setPreferredSize(new Dimension(600, 600));
+        buttonpanel.add(undo);
         add(buttonpanel);
         firstTurnFlag = true;
     }
@@ -204,6 +208,16 @@ public class ChessPanel extends JPanel {
     // inner class that represents action listener for buttons
     private class listener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
+            if(undo == event.getSource())   {
+                boolean isAtStart = model.goToLastBoard();
+                displayBoard();
+                if(!isAtStart)
+                    currentPlayer = currentPlayer.next();
+                else
+                    currentPlayer = Player.WHITE;
+                return;
+            }
+
             for (int r = 0; r < model.numRows(); r++)
                 for (int c = 0; c < model.numColumns(); c++)
                     if (board[r][c] == event.getSource()) {
@@ -223,6 +237,7 @@ public class ChessPanel extends JPanel {
                             if ((model.isValidMove(m)) == true) {
                                 int OgCol = fromCol;
                                 int OgRow = fromRow;
+                                model.saveBoard();
                                 model.move(m);
                                 if (model.inCheck(currentPlayer)) {
                                     Move newM = new Move(toRow, toCol, OgRow, OgCol);
@@ -232,7 +247,6 @@ public class ChessPanel extends JPanel {
 
                                 displayBoard();
                                 currentPlayer = currentPlayer.next();
-                                System.out.println("Panel thinks: " + currentPlayer);
                                 if (model.inCheck(currentPlayer)) {
                                     if (model.isComplete()) {
                                         JOptionPane.showMessageDialog(null,

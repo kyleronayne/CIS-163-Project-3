@@ -1,15 +1,21 @@
 package ChessPrj;
+import java.util.ArrayList;
 
 public class ChessModel implements IChessModel {
     private IChessPiece[][] board;
     private Player player;
     private GUIcodes gameStatus;
     private ChessPiece newPiece;
+    private ArrayList<IChessPiece[][]> prevBoard;
+    private IChessPiece[][] startBoard;
 
     // declare other instance variables as needed
 
     public ChessModel() {
         board = new IChessPiece[8][8];
+        prevBoard = new ArrayList<>();
+        startBoard = new IChessPiece[8][8];
+        prevBoard.clear();
         player = Player.WHITE;
         board[7][0] = new Rook(Player.WHITE);
         board[7][1] = new Knight(Player.WHITE);
@@ -33,6 +39,7 @@ public class ChessModel implements IChessModel {
             board[6][i] = new Pawn(Player.WHITE);
             board[1][i] = new Pawn(Player.BLACK);
         }
+        startBoard = generateNewBoard();
         gameStatus = GUIcodes.NoMessage;
     }
 
@@ -68,13 +75,10 @@ public class ChessModel implements IChessModel {
                                 }
                                 move(m);
                                 if(inCheck(currentPlayer().next()))    {
-                                    System.out.println("Move back, Still in check");
                                     move(m2);
                                     board[x][y] = newPiece;
                                 }
                                 else    {
-                                    System.out.println("Move back, not completed.");
-                                    System.out.println(pieceAt(x, y).player() + " " + pieceAt(x, y).type());
                                     move(m2);
                                     board[x][y] = newPiece;
                                     return false;
@@ -83,13 +87,10 @@ public class ChessModel implements IChessModel {
                             }
                         }}
         else {
-                        System.out.println("-------------------------------");
-                        System.out.println("You are currently the BLACK player");
                         for (int r1 = 0; r1 < numRows(); r1++)
                             for (int c1 = 0; c1 < numColumns(); c1++)
                                 if ((pieceAt(r1, c1) != null))
                                     if ((pieceAt(r1, c1).player() == Player.BLACK)) {
-                                        System.out.println("You are the " + pieceAt(r1, c1).player() + " " + pieceAt(r1, c1).type());
                                         for (int x = 0; x < numRows(); x++)
                                             for (int y = 0; y < numColumns(); y++) {
                                                 Move m = new Move(r1, c1, x, y);
@@ -115,13 +116,10 @@ public class ChessModel implements IChessModel {
                                                     }
                                                     move(m);
                                                     if(inCheck(currentPlayer().next()))    {
-                                                        System.out.println("Move back, Still in check");
                                                         move(m2);
                                                         board[x][y] = newPiece;
                                                     }
                                                     else    {
-                                                        System.out.println("Move back, not completed.");
-                                                        System.out.println(pieceAt(x, y).player() + " " + pieceAt(x, y).type());
                                                         move(m2);
                                                         board[x][y] = newPiece;
                                                         return false;
@@ -132,7 +130,6 @@ public class ChessModel implements IChessModel {
                                     }
                     }
         gameStatus = GUIcodes.Checkmate;
-        System.out.println("CheckMate");
         return true;
     }
 
@@ -149,7 +146,6 @@ public class ChessModel implements IChessModel {
         board[move.toRow][move.toColumn] =  board[move.fromRow][move.fromColumn];
         board[move.fromRow][move.fromColumn] = null;
         player = player.next();
-        System.out.println("Model is switching to: " + player);
 
     }
 
@@ -176,7 +172,6 @@ public class ChessModel implements IChessModel {
                             Move move = new Move(r, c, kingRow, kingCol);
                             if (pieceAt(r, c).isValidMove(move, board)) {
                                 gameStatus = GUIcodes.inCheck;
-                                System.out.println(kingRow + " " + kingCol);
                                return true;
                             }
                     }
@@ -231,6 +226,39 @@ public class ChessModel implements IChessModel {
 
     public void setPiece(int row, int column, IChessPiece piece) {
         board[row][column] = piece;
+    }
+
+    public void saveBoard() {
+        prevBoard.add(generateNewBoard());
+    }
+    //FIXME: If you move, then undo to beginning, then move, undo again, it will put you to the last spot...
+    public boolean goToLastBoard() {
+        System.out.println(prevBoard.size());
+        if(prevBoard.size()>1)  {
+            board = prevBoard.get(prevBoard.size()-1);
+            prevBoard.remove(prevBoard.size()-1);
+            setNextPlayer();
+            return false;
+        }
+        else {
+            System.out.println("Go to og board and it's WHITE turn");
+            board = startBoard;
+            player = Player.WHITE;
+            prevBoard.clear();
+            prevBoard.add(startBoard);
+            return true;
+        }
+    }
+
+    private IChessPiece[][] generateNewBoard()  {
+        IChessPiece[][] copy = new IChessPiece[8][8];
+
+        for(int i=0; i<numRows(); i++)
+            for(int j=0; j<numColumns(); j++) {
+                if(board[i][j] != null)
+                    copy[i][j] = board[i][j];
+            }
+        return copy;
     }
 
     public void AI() {
