@@ -3,7 +3,6 @@ package ChessPrj;
 public abstract class ChessPiece implements IChessPiece {
 
     private Player owner;
-    private boolean firstMove;
     private int boardSize = 8;
     private int wKingRow;
     private int wKingCol;
@@ -51,11 +50,4 @@ public abstract class ChessPiece implements IChessPiece {
         return true;
     }
 
-    public void setFirstMove(boolean wasThisFirstMove)  {
-        firstMove = wasThisFirstMove;
-    }
-
-    public boolean getFirstMove()  {
-        return firstMove;
-    }
 }

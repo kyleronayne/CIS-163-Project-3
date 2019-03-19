@@ -8,6 +8,7 @@ public class ChessModel implements IChessModel {
     private ChessPiece newPiece;
     private ArrayList<IChessPiece[][]> prevBoard;
     private IChessPiece[][] startBoard;
+    private boolean hasUndoneToStart = false;
 
     // declare other instance variables as needed
 
@@ -233,18 +234,21 @@ public class ChessModel implements IChessModel {
     }
     //FIXME: If you move, then undo to beginning, then move, undo again, it will put you to the last spot...
     public boolean goToLastBoard() {
-        if(prevBoard.size()>1)  {
+        System.out.println(prevBoard.size());
+        if((prevBoard.size() <=1) || ((prevBoard.size() == 2) && (hasUndoneToStart)))   {
+            prevBoard.clear();
+            prevBoard.add(generateNewBoard(startBoard));
+            board = prevBoard.get(0);
+            player = Player.WHITE;
+            hasUndoneToStart = true;
+            return true;
+        }
+
+        else  {
             board = prevBoard.get(prevBoard.size()-1);
             prevBoard.remove(prevBoard.size()-1);
             setNextPlayer();
             return false;
-        }
-        else {
-            board = startBoard;
-            player = Player.WHITE;
-            prevBoard.clear();
-            prevBoard.add(startBoard);
-            return true;
         }
     }
 
@@ -255,6 +259,17 @@ public class ChessModel implements IChessModel {
             for(int j=0; j<numColumns(); j++) {
                 if(board[i][j] != null)
                     copy[i][j] = board[i][j];
+            }
+        return copy;
+    }
+
+    private IChessPiece[][] generateNewBoard(IChessPiece[][] arrayToCopy)  {
+        IChessPiece[][] copy = new IChessPiece[8][8];
+
+        for(int i=0; i<numRows(); i++)
+            for(int j=0; j<numColumns(); j++) {
+                if(arrayToCopy[i][j] != null)
+                    copy[i][j] = arrayToCopy[i][j];
             }
         return copy;
     }

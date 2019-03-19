@@ -208,13 +208,13 @@ public class ChessPanel extends JPanel {
 
     // inner class that represents action listener for buttons
     private class listener implements ActionListener {
-        //FIXME: Ask about adding firstMove to IChessPiece
         public void actionPerformed(ActionEvent event) {
             for(int i=0; i<8; i++)
                 for(int j=0; j<8; j++)  {
                     if(model.pieceAt(i, j) != null)
                         if(model.pieceAt(i, j).player() == currentPlayer)
-                            model.pieceAt(i, j).setFirstMove(false);
+                            if(model.pieceAt(i, j).type().equals("Pawn"))
+                                ((Pawn) model.pieceAt(i, j)).setFirstMove(false);
                 }
 
             if(undo == event.getSource())   {
@@ -251,12 +251,13 @@ public class ChessPanel extends JPanel {
                                                 ((toCol == fromCol+ 1) ||
                                                         (toCol == fromCol - 1))) {
                                             //if enPassant is legal
-                                            if (model.pieceAt(toRow + 1,toCol).getFirstMove()) {
-                                                en_passant = true;
-                                                Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
-                                                model.saveBoard();
-                                                model.move(enPassant);
-                                                m = new Move(fromRow, toCol, toRow, toCol);
+                                            if(model.pieceAt(toRow, toCol).type().equals("Pawn"))
+                                                if (((Pawn) model.pieceAt(toRow + 1,toCol)).getFirstMove()) {
+                                                    en_passant = true;
+                                                    Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                    model.saveBoard();
+                                                    model.move(enPassant);
+                                                    m = new Move(fromRow, toCol, toRow, toCol);
                                             }
                                         }
                                     }
@@ -266,11 +267,12 @@ public class ChessPanel extends JPanel {
                                                     ((toCol == fromCol + 1) ||
                                                             (toCol == fromCol - 1))) {
                                                 //if enPassant is legal
-                                                if (model.pieceAt(toRow - 1, toCol).getFirstMove()) {
-                                                    en_passant = true;
-                                                    Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
-                                                    model.saveBoard();
-                                                    model.move(enPassant);
+                                                if(model.pieceAt(toRow-1, toCol).type().equals("Pawn"))
+                                                    if (((Pawn) model.pieceAt(toRow - 1, toCol)).getFirstMove()) {
+                                                        en_passant = true;
+                                                        Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                        model.saveBoard();
+                                                        model.move(enPassant);
                                                     m = new Move(fromRow, toCol, toRow, toCol);
                                                 }
                                             }

@@ -1,6 +1,7 @@
 package ChessPrj;
 //FIXME: en Passant Bug that allows the king to move into check immediately following enPassant
 public class Pawn extends ChessPiece {
+    public boolean firstMove = false;
 
     public Pawn(Player player) {
         super(player);
@@ -16,7 +17,6 @@ public class Pawn extends ChessPiece {
         boolean superValid = super.isValidMove(move, board);
         boolean validMove = false;
 
-
         if (this.player() == Player.WHITE) {
             if (move.fromRow == 6 && move.toRow == move.fromRow - 2 &&
                     move.toColumn == move.fromColumn) {
@@ -25,7 +25,7 @@ public class Pawn extends ChessPiece {
                         == null) {
                     validMove = true;
                     if (super.isValidMove(move, board)) ;
-                    super.setFirstMove(true);
+                    setFirstMove(true);
                 }
             }
 
@@ -42,7 +42,7 @@ public class Pawn extends ChessPiece {
                 if (board[move.toRow + 1][move.toColumn] != null)
                     if (board[move.toRow + 1][move.toColumn].player() == Player.BLACK)
                         if (board[move.toRow + 1][move.toColumn].type().equals("Pawn"))
-                            if (board[move.toRow + 1][move.toColumn].getFirstMove()) {
+                            if (((Pawn) board[move.toRow + 1][move.toColumn]).getFirstMove()) {
                                 validMove = true;
                             }
             }
@@ -68,7 +68,7 @@ public class Pawn extends ChessPiece {
                         board[move.fromRow + 2][move.fromColumn] == null) {
                     validMove = true;
                     if(super.isValidMove(move, board));
-                    super.setFirstMove(true);
+                    setFirstMove(true);
                 }
             }
 
@@ -85,7 +85,7 @@ public class Pawn extends ChessPiece {
                 if (board[move.toRow - 1][move.toColumn] != null)
                     if (board[move.toRow - 1][move.toColumn].player() == Player.WHITE)
                         if (board[move.toRow - 1][move.toColumn].type().equals("Pawn"))
-                            if (board[move.toRow - 1][move.toColumn].getFirstMove()) {
+                            if (((Pawn) board[move.toRow - 1][move.toColumn]).getFirstMove()) {
                                 validMove = true;
                             }
             }
@@ -102,5 +102,13 @@ public class Pawn extends ChessPiece {
             }
         }
         return validMove&&superValid;
+    }
+
+    public boolean getFirstMove()   {
+        return firstMove;
+    }
+
+    public void setFirstMove(boolean wasThisFirstMove) {
+        firstMove = wasThisFirstMove;
     }
 }

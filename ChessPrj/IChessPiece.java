@@ -33,8 +33,4 @@ public interface IChessPiece {
      * @throws IllegalArgumentException  if {@code this} object isn't the piece at location {@code [move.fromRow, move.fromColumn]}.
      */
     boolean isValidMove(Move move, IChessPiece[][] board);
-
-    //FIXME: Ask about adding these!!!!!!!!!
-    boolean getFirstMove();
-    void setFirstMove(boolean wasThisFirstMove);
 }
