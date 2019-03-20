@@ -9,6 +9,7 @@ public class ChessModel implements IChessModel {
     private ArrayList<IChessPiece[][]> prevBoard;
     private IChessPiece[][] startBoard;
     private boolean hasUndoneToStart = false;
+    private boolean usingAI = false;
 
     // declare other instance variables as needed
 
@@ -274,6 +275,68 @@ public class ChessModel implements IChessModel {
         return copy;
     }
 
+    private boolean AIcanPutWhiteInCheck()  {
+
+        for(int r=0; r<numRows(); r++)
+            for(int c=0; c<numColumns(); c++)
+                if(board[r][c]!=null)
+                    if(board[r][c].player() == Player.BLACK)    {
+                        for(int i=0; i<numRows(); i++)
+                            for(int j=0; j<numColumns(); j++)   {
+                                Move m = new Move(r, c, i, j);
+                                Move m2 = new Move(i, j, r, c);
+                                if(board[r][c].isValidMove(m, board)) {
+                                    newPiece = null;
+                                    if(pieceAt(i, j) != null)   {
+                                        //Want a new white piece
+                                        if(pieceAt(i, j).type().equals("King"))
+                                            newPiece = new King(Player.WHITE);
+                                        else if(pieceAt(i, j).type().equals("Queen"))
+                                            newPiece = new Queen(Player.WHITE);
+                                        else if(pieceAt(i, j).type().equals("Bishop"))
+                                            newPiece = new Bishop(Player.WHITE);
+                                        else if(pieceAt(i, j).type().equals("Knight"))
+                                            newPiece = new Knight(Player.WHITE);
+                                        else if(pieceAt(i, j).type().equals("Rook"))
+                                            newPiece = new Rook(Player.WHITE);
+                                        else if(pieceAt(i, j).type().equals("Pawn"))
+                                            newPiece = new Pawn(Player.WHITE);
+                                        else
+                                            newPiece = null;
+                                    }
+                                    move(m);
+                                    if(inCheck(Player.WHITE))   {
+                                        move(m2);
+                                        board[i][j] = newPiece;
+                                        return true;
+                                    }
+                                    else    {
+                                        move(m2);
+                                        board[i][j] = newPiece;
+                                    }
+
+                                }
+                            }
+                    }
+        return false;
+    }
+
+    public boolean noMovesMade()    {
+        return board.equals(startBoard);
+    }
+
+    public void useAI(boolean ai)  {
+        if(ai)
+            usingAI = true;
+        else
+            usingAI = false;
+
+    }
+
+    public boolean AIisUsed()   {
+        return usingAI;
+    }
+
     public void AI() {
         /*
          * Write a simple AI set of rules in the following order.
@@ -291,6 +354,13 @@ public class ChessModel implements IChessModel {
          *d. Move a piece (pawns first) forward toward opponent king
          *		i. check to see if that piece is in danger of being removed, if so, move a different piece.
          */
+        if(inCheck(Player.BLACK))   {
+
+        }
+
+        else if(AIcanPutWhiteInCheck()) {
+
+        }
 
     }
 }
