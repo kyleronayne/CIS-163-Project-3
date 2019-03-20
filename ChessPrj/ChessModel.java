@@ -205,6 +205,11 @@ public class ChessModel implements IChessModel {
         return false;
     }
 
+    public boolean canCastle() {
+        Move kingMove = new Move(7, 4, 7, 2);
+        return isValidMove(kingMove);
+    }
+
 
     public Player currentPlayer() {
         return player;
