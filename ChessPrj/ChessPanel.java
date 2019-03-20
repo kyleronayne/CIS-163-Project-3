@@ -300,6 +300,39 @@ public class ChessPanel extends JPanel {
                                     model.saveBoard();
                                 model.move(m);
                                 en_passant = false;
+
+                                if (model.pieceAt(r, c).type().equals("King")) {
+                                    if (currentPlayer == Player.WHITE) {
+                                        if (toCol == fromCol - 2) {
+                                            Move leftRookMove =
+                                                    new Move(7, 0, 7, 3);
+                                            model.move(leftRookMove);
+                                        }
+
+                                        if (toCol == fromCol + 2 ) {
+                                            Move rightRookMove =
+                                                    new Move(7, 7, 7, 5);
+                                            model.move(rightRookMove);
+                                        }
+                                    }
+
+                                    if (currentPlayer == Player.BLACK) {
+                                        if (toCol == fromCol - 2) {
+                                            Move leftRookMove =
+                                                    new Move(0, 0, 0, 3);
+                                            model.move(leftRookMove);
+                                        }
+
+                                        if (toCol == fromCol + 2) {
+                                            Move rightRookMove =
+                                                    new Move(0, 7, 0, 5);
+                                            model.move(rightRookMove);
+                                        }
+                                    }
+                                }
+
+                                currentPlayer = currentPlayer.next();
+
                                 if (model.inCheck(currentPlayer)) {
                                     Move newM = new Move(toRow, toCol, OgRow, OgCol);
                                     model.move(newM);
@@ -307,7 +340,6 @@ public class ChessPanel extends JPanel {
                                 }
 
                                 displayBoard();
-                                currentPlayer = currentPlayer.next();
                                 if (model.inCheck(currentPlayer)) {
                                     if (model.isComplete()) {
                                         JOptionPane.showMessageDialog(null,
