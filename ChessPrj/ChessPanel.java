@@ -8,6 +8,8 @@ public class ChessPanel extends JPanel {
 
     private JButton[][] board;
     private JButton undo;
+    private JRadioButton onePlayer;
+    private JRadioButton twoPlayer;
     private ChessModel model;
 
     private ImageIcon wRook;
@@ -46,6 +48,8 @@ public class ChessPanel extends JPanel {
 
         JPanel boardpanel = new JPanel();
         JPanel buttonpanel = new JPanel();
+        JPanel popup = new JPanel();
+        popup.setLayout(new BoxLayout(popup, BoxLayout.Y_AXIS));
         boardpanel.setLayout(new GridLayout(model.numRows(), model.numColumns(), 1, 1));
 
         for (int r = 0; r < model.numRows(); r++) {
@@ -62,6 +66,20 @@ public class ChessPanel extends JPanel {
                 boardpanel.add(board[r][c]);
             }
         }
+        onePlayer = new JRadioButton("Play against the Computer", null);
+        onePlayer.setSelected(false);
+        onePlayer.addActionListener(listener);
+        twoPlayer = new JRadioButton("Play against a Friend", null);
+        twoPlayer.setSelected(true);
+        twoPlayer.addActionListener(listener);
+        JLabel label1 = new JLabel("Please enter your game mode below");
+        JLabel label2 = new JLabel("Default is two player mode");
+        popup.add(label1);
+        popup.add(label2);
+        popup.add(onePlayer);
+        popup.add(twoPlayer);
+        JOptionPane.showMessageDialog(null, popup);
+
         undo = new JButton("Undo", null);
         undo.addActionListener(listener);
         add(boardpanel, BorderLayout.WEST);
@@ -225,6 +243,24 @@ public class ChessPanel extends JPanel {
                 else
                     currentPlayer = Player.WHITE;
                 return;
+            }
+
+            if(onePlayer == event.getSource())  {
+                if(twoPlayer.isSelected())
+                    twoPlayer.setSelected(false);
+                if(onePlayer.isSelected())
+                    model.useAI(true);
+                else
+                    model.useAI(false);
+            }
+
+            if(twoPlayer == event.getSource())  {
+                if(onePlayer.isSelected())
+                    onePlayer.setSelected(false);
+                if(twoPlayer.isSelected())
+                    model.useAI(false);
+                else if(!twoPlayer.isSelected() && !onePlayer.isSelected())
+                    model.useAI(false);
             }
 
             for (int r = 0; r < model.numRows(); r++)
