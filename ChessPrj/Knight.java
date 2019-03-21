@@ -1,5 +1,11 @@
 package ChessPrj;
 
+/**********************************************************************
+ * Class that represents the Knight chess piece. Determines whether a
+ * a specified move is valid for a Knight to make in terms of the rules
+ * of chess. Also assigns the piece to the specified player, and assigns
+ * the chess piece to be of type "Knight".
+ *********************************************************************/
 public class Knight extends ChessPiece {
 
     /******************************************************************
