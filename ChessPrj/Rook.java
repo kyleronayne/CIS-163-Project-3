@@ -43,17 +43,20 @@ public class Rook extends ChessPiece {
             rookMoved = true;
             valid = true;
             if (move.toColumn < move.fromColumn) {
+                System.out.println("DO I HIT THIS?");
                 for (int i = 1; i < Math.abs(move.fromColumn - move.toColumn); i++) {
-                    if (!(board[move.fromRow][move.fromColumn - 1] == null))
+                    if (!((board[move.fromRow][move.fromColumn - i]) == null)) {
                         rookMoved = false;
                         return false;
+                    }
                 }
             }
             if (move.toColumn > move.fromColumn) {
                 for (int i = 1; i < Math.abs(move.fromColumn - move.toColumn); i++) {
-                    if (!(board[move.fromRow][move.fromColumn + 1] == null))
+                    if (!(board[move.fromRow][move.fromColumn + i] == null)) {
                         rookMoved = false;
                         return false;
+                    }
                 }
             }
         }
