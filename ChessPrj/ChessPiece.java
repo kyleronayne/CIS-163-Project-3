@@ -45,7 +45,9 @@ public abstract class ChessPiece implements IChessPiece {
         }
 
 
+
         //If none of the above are true, the move is valid
         return true;
     }
+
 }

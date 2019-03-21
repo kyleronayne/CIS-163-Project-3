@@ -7,6 +7,7 @@ import javax.swing.*;
 public class ChessPanel extends JPanel {
 
     private JButton[][] board;
+    private JButton undo;
     private ChessModel model;
 
     private ImageIcon wRook;
@@ -33,7 +34,7 @@ public class ChessPanel extends JPanel {
     private int fromCol;
     private int toCol;
     private Player currentPlayer = Player.WHITE;
-    // declare other instance variables as needed
+    private boolean en_passant = false;
 
     private listener listener;
 
@@ -54,15 +55,18 @@ public class ChessPanel extends JPanel {
                     board[r][c].addActionListener(listener);
                 } else if (model.pieceAt(r, c).player() == Player.WHITE)
                     placeWhitePieces(r, c);
-                else if (model.pieceAt(r, c).player() == Player.BLACK)
+                else if(model.pieceAt(r, c).player() == Player.BLACK)
                     placeBlackPieces(r, c);
 
                 setBackGroundColor(r, c);
                 boardpanel.add(board[r][c]);
             }
         }
+        undo = new JButton("Undo", null);
+        undo.addActionListener(listener);
         add(boardpanel, BorderLayout.WEST);
         boardpanel.setPreferredSize(new Dimension(600, 600));
+        buttonpanel.add(undo);
         add(buttonpanel);
         firstTurnFlag = true;
     }
@@ -150,7 +154,6 @@ public class ChessPanel extends JPanel {
         bKnight = new ImageIcon("ChessPrj/bKnight.png");
 
     }
-
     // method that updates the board
     private void displayBoard() {
 
@@ -158,7 +161,7 @@ public class ChessPanel extends JPanel {
             for (int c = 0; c < 8; c++)
                 if (model.pieceAt(r, c) == null)
                     board[r][c].setIcon(null);
-                else {
+                else    {
                     if (model.pieceAt(r, c).player() == Player.WHITE) {
                         if (model.pieceAt(r, c).type().equals("Pawn"))
                             board[r][c].setIcon(wPawn);
@@ -177,8 +180,9 @@ public class ChessPanel extends JPanel {
 
                         if (model.pieceAt(r, c).type().equals("King"))
                             board[r][c].setIcon(wKing);
-                    } else if (model.pieceAt(r, c).player() == Player.BLACK) {
-                        if (model.pieceAt(r, c).type().equals("Pawn"))
+                    }
+                    else if(model.pieceAt(r, c).player() == Player.BLACK)   {
+                        if(model.pieceAt(r, c).type().equals("Pawn"))
                             board[r][c].setIcon(bPawn);
 
                         if (model.pieceAt(r, c).type().equals("Rook"))
@@ -205,9 +209,27 @@ public class ChessPanel extends JPanel {
     // inner class that represents action listener for buttons
     private class listener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
+            for(int i=0; i<8; i++)
+                for(int j=0; j<8; j++)  {
+                    if(model.pieceAt(i, j) != null)
+                        if(model.pieceAt(i, j).player() == currentPlayer)
+                            if(model.pieceAt(i, j).type().equals("Pawn"))
+                                ((Pawn) model.pieceAt(i, j)).setFirstMove(false);
+                }
+
+            if(undo == event.getSource())   {
+                boolean isAtStart = model.goToLastBoard();
+                displayBoard();
+                if(!isAtStart)
+                    currentPlayer = currentPlayer.next();
+                else
+                    currentPlayer = Player.WHITE;
+                return;
+            }
+
             for (int r = 0; r < model.numRows(); r++)
                 for (int c = 0; c < model.numColumns(); c++)
-                    if (board[r][c] == event.getSource())
+                    if (board[r][c] == event.getSource()) {
                         if (firstTurnFlag) {
                             if (model.pieceAt(r, c) != null) {
                                 if (model.pieceAt(r, c).player() == currentPlayer) {
@@ -222,42 +244,103 @@ public class ChessPanel extends JPanel {
                             firstTurnFlag = true;
                             Move m = new Move(fromRow, fromCol, toRow, toCol);
                             if ((model.isValidMove(m)) == true) {
+                                System.out.println("Here I am");
+                                if(model.pieceAt(fromRow, fromCol) != null) {
+                                    if (model.pieceAt(fromRow, fromCol).player() == Player.WHITE) {
+                                        if((toRow == 2) && (toRow == fromRow - 1) &&
+                                                ((toCol == fromCol+ 1) ||
+                                                        (toCol == fromCol - 1))) {
+                                            //if enPassant is legal
+                                            if(model.pieceAt(toRow, toCol).type().equals("Pawn"))
+                                                if (((Pawn) model.pieceAt(toRow + 1,toCol)).getFirstMove()) {
+                                                    en_passant = true;
+                                                    Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                    model.saveBoard();
+                                                    model.move(enPassant);
+                                                    m = new Move(fromRow, toCol, toRow, toCol);
+                                            }
+                                        }
+                                    }
+                                    else if(model.pieceAt(fromRow, fromCol) != null) {
+                                        if (model.pieceAt(fromRow, fromCol).player() == Player.BLACK) {
+                                            if ((toRow == 5) && (toRow == fromRow + 1) &&
+                                                    ((toCol == fromCol + 1) ||
+                                                            (toCol == fromCol - 1))) {
+                                                //if enPassant is legal
+                                                if(model.pieceAt(toRow-1, toCol).type().equals("Pawn"))
+                                                    if (((Pawn) model.pieceAt(toRow - 1, toCol)).getFirstMove()) {
+                                                        en_passant = true;
+                                                        Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                        model.saveBoard();
+                                                        model.move(enPassant);
+                                                    m = new Move(fromRow, toCol, toRow, toCol);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                                 int OgCol = fromCol;
                                 int OgRow = fromRow;
+                                if(!en_passant)
+                                    model.saveBoard();
                                 model.move(m);
+                                en_passant = false;
+
+                                if (model.pieceAt(r, c).type().equals("King")) {
+                                    if (currentPlayer == Player.WHITE) {
+                                        if (toCol == fromCol - 2) {
+                                            Move leftRookMove =
+                                                    new Move(7, 0, 7, 3);
+                                            model.move(leftRookMove);
+                                        }
+
+                                        if (toCol == fromCol + 2 ) {
+                                            Move rightRookMove =
+                                                    new Move(7, 7, 7, 5);
+                                            model.move(rightRookMove);
+                                        }
+                                    }
+
+                                    if (currentPlayer == Player.BLACK) {
+                                        if (toCol == fromCol - 2) {
+                                            Move leftRookMove =
+                                                    new Move(0, 0, 0, 2);
+                                            model.move(leftRookMove);
+                                        }
+
+                                        if (toCol == fromCol + 2) {
+                                            Move rightRookMove =
+                                                    new Move(0, 7, 0, 4);
+                                            model.move(rightRookMove);
+                                        }
+                                    }
+                                }
+
                                 if (model.inCheck(currentPlayer)) {
                                     Move newM = new Move(toRow, toCol, OgRow, OgCol);
                                     model.move(newM);
                                     return;
                                 }
+
                                 displayBoard();
-//                                if (model.inCheck(currentPlayer)) {
-//                                    System.out.println(currentPlayer + " Is in check");
-//                                    if (model.isComplete()) {
-//                                        JOptionPane.showMessageDialog(null,
-//                                                currentPlayer +
-//                                                        " CheckMate!");
-//                                    } else {
-//                                        JOptionPane.showMessageDialog(null,
-//                                                currentPlayer +
-//                                                        " Is In Check!");
-//                                    }
-//                                }
                                 currentPlayer = currentPlayer.next();
                                 if (model.inCheck(currentPlayer)) {
-                                    System.out.println(currentPlayer + " Is in check");
                                     if (model.isComplete()) {
                                         JOptionPane.showMessageDialog(null,
                                                 currentPlayer +
-                                                        " CheckMate!");
+                                                        " Has been CHECKMATED!\n" +
+                                                        "GAME OVER!");
                                     } else {
                                         JOptionPane.showMessageDialog(null,
                                                 currentPlayer +
-                                                        " Is In Check!");
+                                                        " Is In Check!\n" +
+                                                        "Next move must get out of check!");
                                     }
                                 }
+
                             }
                         }
+                    }
         }
     }
 }
