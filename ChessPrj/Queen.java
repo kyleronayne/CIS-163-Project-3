@@ -1,5 +1,10 @@
 package ChessPrj;
 
+/**********************************************************************
+ * Class that represents the Queen chess piece. Determines whether
+ * the queen is able to make a specified move, sets the piece to a
+ * specific player, and make the piece type "Queen"
+ *********************************************************************/
 public class Queen extends ChessPiece {
 
     /******************************************************************
