@@ -227,155 +227,164 @@ public class ChessPanel extends JPanel {
     // inner class that represents action listener for buttons
     private class listener implements ActionListener {
         public void actionPerformed(ActionEvent event) {
-            for(int i=0; i<8; i++)
-                for(int j=0; j<8; j++)  {
-                    if(model.pieceAt(i, j) != null)
-                        if(model.pieceAt(i, j).player() == currentPlayer)
-                            if(model.pieceAt(i, j).type().equals("Pawn"))
+            for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++) {
+                    if (model.pieceAt(i, j) != null)
+                        if (model.pieceAt(i, j).player() == currentPlayer)
+                            if (model.pieceAt(i, j).type().equals("Pawn"))
                                 ((Pawn) model.pieceAt(i, j)).setFirstMove(false);
                 }
 
-            if(undo == event.getSource())   {
+            if (undo == event.getSource()) {
                 boolean isAtStart = model.goToLastBoard();
                 displayBoard();
-                if(!isAtStart)
+                if (!isAtStart)
                     currentPlayer = currentPlayer.next();
                 else
                     currentPlayer = Player.WHITE;
                 return;
             }
 
-            if(onePlayer == event.getSource())  {
-                if(twoPlayer.isSelected())
+            if (onePlayer == event.getSource()) {
+                if (twoPlayer.isSelected())
                     twoPlayer.setSelected(false);
-                if(onePlayer.isSelected())
+                if (onePlayer.isSelected())
                     model.useAI(true);
                 else
                     model.useAI(false);
             }
 
-            if(twoPlayer == event.getSource())  {
-                if(onePlayer.isSelected())
+            if (twoPlayer == event.getSource()) {
+                if (onePlayer.isSelected())
                     onePlayer.setSelected(false);
-                if(twoPlayer.isSelected())
+                if (twoPlayer.isSelected())
                     model.useAI(false);
-                else if(!twoPlayer.isSelected() && !onePlayer.isSelected())
+                else if (!twoPlayer.isSelected() && !onePlayer.isSelected())
                     model.useAI(false);
             }
-
-            for (int r = 0; r < model.numRows(); r++)
-                for (int c = 0; c < model.numColumns(); c++)
-                    if (board[r][c] == event.getSource()) {
-                        if (firstTurnFlag) {
-                            if (model.pieceAt(r, c) != null) {
-                                if (model.pieceAt(r, c).player() == currentPlayer) {
-                                    fromRow = r;
-                                    fromCol = c;
-                                    firstTurnFlag = false;
-                                }
-                            }
-                        } else {
-                            toRow = r;
-                            toCol = c;
-                            firstTurnFlag = true;
-                            Move m = new Move(fromRow, fromCol, toRow, toCol);
-                            if ((model.isValidMove(m)) == true) {
-                                if(model.pieceAt(fromRow, fromCol) != null) {
-                                    if (model.pieceAt(fromRow, fromCol).player() == Player.WHITE) {
-                                        if((toRow == 2) && (toRow == fromRow - 1) &&
-                                                ((toCol == fromCol+ 1) ||
-                                                        (toCol == fromCol - 1))) {
-                                            //if enPassant is legal
-                                            if(model.pieceAt(toRow+1, toCol).type().equals("Pawn"))
-                                                if (((Pawn) model.pieceAt(toRow + 1,toCol)).getFirstMove()) {
-                                                    en_passant = true;
-                                                    Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
-                                                    model.saveBoard();
-                                                    model.move(enPassant);
-                                                    m = new Move(fromRow, toCol, toRow, toCol);
-                                            }
-                                        }
+            if(!model.AIisUsed())    {
+                for (int r = 0; r < model.numRows(); r++)
+                    for (int c = 0; c < model.numColumns(); c++)
+                        if (board[r][c] == event.getSource()) {
+                            if (firstTurnFlag) {
+                                if (model.pieceAt(r, c) != null) {
+                                    if (model.pieceAt(r, c).player() == currentPlayer) {
+                                        fromRow = r;
+                                        fromCol = c;
+                                        firstTurnFlag = false;
                                     }
-                                    else if(model.pieceAt(fromRow, fromCol) != null) {
-                                        if (model.pieceAt(fromRow, fromCol).player() == Player.BLACK) {
-                                            if ((toRow == 5) && (toRow == fromRow + 1) &&
+                                }
+                            } else {
+                                toRow = r;
+                                toCol = c;
+                                firstTurnFlag = true;
+                                Move m = new Move(fromRow, fromCol, toRow, toCol);
+                                if ((model.isValidMove(m)) == true) {
+                                    if (model.pieceAt(fromRow, fromCol) != null) {
+                                        if (model.pieceAt(fromRow, fromCol).player() == Player.WHITE) {
+                                            if ((toRow == 2) && (toRow == fromRow - 1) &&
                                                     ((toCol == fromCol + 1) ||
                                                             (toCol == fromCol - 1))) {
                                                 //if enPassant is legal
-                                                if(model.pieceAt(toRow-1, toCol).type().equals("Pawn"))
-                                                    if (((Pawn) model.pieceAt(toRow - 1, toCol)).getFirstMove()) {
+                                                if (model.pieceAt(toRow + 1, toCol).type().equals("Pawn"))
+                                                    if (((Pawn) model.pieceAt(toRow + 1, toCol)).getFirstMove()) {
                                                         en_passant = true;
                                                         Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
                                                         model.saveBoard();
                                                         model.move(enPassant);
-                                                    m = new Move(fromRow, toCol, toRow, toCol);
+                                                        m = new Move(fromRow, toCol, toRow, toCol);
+                                                    }
+                                            }
+                                        }
+                                        else if (model.pieceAt(fromRow, fromCol) != null) {
+                                            if (model.pieceAt(fromRow, fromCol).player() == Player.BLACK) {
+                                                if ((toRow == 5) && (toRow == fromRow + 1) &&
+                                                        ((toCol == fromCol + 1) ||
+                                                                (toCol == fromCol - 1))) {
+                                                    //if enPassant is legal
+                                                    if (model.pieceAt(toRow - 1, toCol).type().equals("Pawn"))
+                                                        if (((Pawn) model.pieceAt(toRow - 1, toCol)).getFirstMove()) {
+                                                            en_passant = true;
+                                                            Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                            model.saveBoard();
+                                                            model.move(enPassant);
+                                                            m = new Move(fromRow, toCol, toRow, toCol);
+                                                        }
                                                 }
                                             }
                                         }
                                     }
-                                }
-                                int OgCol = fromCol;
-                                int OgRow = fromRow;
-                                if(!en_passant)
-                                    model.saveBoard();
-                                model.move(m);
-                                en_passant = false;
+                                    int OgCol = fromCol;
+                                    int OgRow = fromRow;
+                                    if (!en_passant)
+                                        model.saveBoard();
+                                    model.move(m);
+                                    en_passant = false;
 
-                                if (model.pieceAt(r, c).type().equals("King")) {
-                                    if (currentPlayer == Player.WHITE) {
-                                        if (toCol == fromCol - 2) {
-                                            Move leftRookMove =
-                                                    new Move(7, 0, 7, 3);
-                                            model.move(leftRookMove);
+                                    if (model.pieceAt(r, c).type().equals("King")) {
+                                        if (currentPlayer == Player.WHITE) {
+                                            if (toCol == fromCol - 2) {
+                                                Move leftRookMove =
+                                                        new Move(7, 0, 7, 3);
+                                                model.move(leftRookMove);
+                                            }
+
+                                            if (toCol == fromCol + 2) {
+                                                Move rightRookMove =
+                                                        new Move(7, 7, 7, 5);
+                                                model.move(rightRookMove);
+                                            }
                                         }
 
-                                        if (toCol == fromCol + 2 ) {
-                                            Move rightRookMove =
-                                                    new Move(7, 7, 7, 5);
-                                            model.move(rightRookMove);
+                                        if (currentPlayer == Player.BLACK) {
+                                            if (toCol == fromCol - 2) {
+                                                Move leftRookMove =
+                                                        new Move(0, 0, 0, 2);
+                                                model.move(leftRookMove);
+                                            }
+
+                                            if (toCol == fromCol + 2) {
+                                                Move rightRookMove =
+                                                        new Move(0, 7, 0, 4);
+                                                model.move(rightRookMove);
+                                            }
                                         }
                                     }
 
-                                    if (currentPlayer == Player.BLACK) {
-                                        if (toCol == fromCol - 2) {
-                                            Move leftRookMove =
-                                                    new Move(0, 0, 0, 2);
-                                            model.move(leftRookMove);
-                                        }
+                                    if (model.inCheck(currentPlayer)) {
+                                        Move newM = new Move(toRow, toCol, OgRow, OgCol);
+                                        model.move(newM);
+                                        return;
+                                    }
 
-                                        if (toCol == fromCol + 2) {
-                                            Move rightRookMove =
-                                                    new Move(0, 7, 0, 4);
-                                            model.move(rightRookMove);
+                                    displayBoard();
+                                    currentPlayer = currentPlayer.next();
+                                    if (model.inCheck(currentPlayer)) {
+                                        if (model.isComplete()) {
+                                            JOptionPane.showMessageDialog(null,
+                                                    currentPlayer +
+                                                            " Has been CHECKMATED!\n" +
+                                                            "GAME OVER!");
+                                        } else {
+                                            JOptionPane.showMessageDialog(null,
+                                                    currentPlayer +
+                                                            " Is In Check!\n" +
+                                                            "Next move must get out of check!");
                                         }
                                     }
-                                }
 
-                                if (model.inCheck(currentPlayer)) {
-                                    Move newM = new Move(toRow, toCol, OgRow, OgCol);
-                                    model.move(newM);
-                                    return;
                                 }
-
-                                displayBoard();
-                                currentPlayer = currentPlayer.next();
-                                if (model.inCheck(currentPlayer)) {
-                                    if (model.isComplete()) {
-                                        JOptionPane.showMessageDialog(null,
-                                                currentPlayer +
-                                                        " Has been CHECKMATED!\n" +
-                                                        "GAME OVER!");
-                                    } else {
-                                        JOptionPane.showMessageDialog(null,
-                                                currentPlayer +
-                                                        " Is In Check!\n" +
-                                                        "Next move must get out of check!");
-                                    }
-                                }
-
                             }
                         }
-                    }
+            }
+
+            else if(model.AIisUsed())   {
+                if(currentPlayer == Player.WHITE)   {
+                    for(int r=0; r<model.numRows(); r++)
+                        for(int c=0; c<model.numColumns(); c++)
+                            if(firstTurnFlag);
+                }
+            }
         }
     }
 }

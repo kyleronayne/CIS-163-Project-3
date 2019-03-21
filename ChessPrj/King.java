@@ -159,31 +159,44 @@ public class King extends ChessPiece {
         else if (move.toColumn == move.fromColumn - 2 || move.toColumn == move.fromColumn + 2) {
             if (this.player() == Player.WHITE) {
                 if (!WkingMoved) {
-                    if (board[7][0] != null && board[7][7] != null) {
-                        if (board[7][0].type().equals("Rook") && board[7][7].type().equals("Rook")) {
-                            if (board[7][1] == null && board[7][2] == null && board[7][3] == null) {
-                                if (board[7][5] == null && board[7][6] == null) {
+                    if(move.toColumn == move.fromColumn +2) {
+                        if(board[7][7] != null)
+                            if(board[7][7].type().equals("Rook"))
+                                if(board[7][5] == null && board[7][6] == null)  {
+                                    WkingMoved=true;
+                                    valid = true;
+                                }
+                    }
+                    else if(move.toColumn == move.fromColumn-2) {
+                        if(board[7][0] != null)
+                            if(board[7][0].type().equals("Rook"))
+                                if(board[7][1] == null && board[7][2] == null && board[7][3]==null) {
                                     WkingMoved = true;
                                     valid = true;
                                 }
-                            }
-                        }
                     }
+
                 }
             }
 
             if (this.player() == Player.BLACK) {
                 System.out.println(BkingMoved);
                 if (!BkingMoved) {
-                    if (board[0][0] != null && board[0][7] != null) {
-                        if (board[0][0].type().equals("Rook") && board[0][7].type().equals("Rook")) {
-                            if (board[0][1] == null && board[0][2] == null) {
-                                if (board[0][5] == null && board[0][6] == null && board[0][4] == null) {
+                    if(move.toColumn == move.fromColumn-2)  {
+                        if(board[0][0] != null)
+                            if(board[0][0].type().equals("Rook"))
+                                if(board[0][1] == null & board[0][2] == null) {
                                     BkingMoved = true;
                                     valid = true;
                                 }
-                            }
-                        }
+                    }
+                    else if(move.toColumn == move.fromColumn+2) {
+                        if(board[0][7] != null)
+                            if(board[0][7].type().equals("Rook"))
+                                if(board[0][4]==null && board[0][5]==null && board[0][6]==null) {
+                                    BkingMoved = true;
+                                    valid = true;
+                                }
                     }
                 }
             }
