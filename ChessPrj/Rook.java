@@ -14,7 +14,7 @@ public class Rook extends ChessPiece {
      * Constructor for Rook which calls chessPiece to obtain who this
      * piece belongs to. Also begins by setting rookMoved to false
      * because the piece has not yet been moved
-     * @param player
+     * @param player the player who's piece the Rook belongs to.
      *****************************************************************/
     public Rook(Player player) {
         super(player);
@@ -125,3 +125,4 @@ public class Rook extends ChessPiece {
         return rookMoved;
     }
 }
+
