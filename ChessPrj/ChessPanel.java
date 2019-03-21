@@ -8,6 +8,8 @@ public class ChessPanel extends JPanel {
 
     private JButton[][] board;
     private JButton undo;
+    private JRadioButton onePlayer;
+    private JRadioButton twoPlayer;
     private ChessModel model;
 
     private ImageIcon wRook;
@@ -46,6 +48,8 @@ public class ChessPanel extends JPanel {
 
         JPanel boardpanel = new JPanel();
         JPanel buttonpanel = new JPanel();
+        JPanel popup = new JPanel();
+        popup.setLayout(new BoxLayout(popup, BoxLayout.Y_AXIS));
         boardpanel.setLayout(new GridLayout(model.numRows(), model.numColumns(), 1, 1));
 
         for (int r = 0; r < model.numRows(); r++) {
@@ -62,6 +66,20 @@ public class ChessPanel extends JPanel {
                 boardpanel.add(board[r][c]);
             }
         }
+        onePlayer = new JRadioButton("Play against the Computer", null);
+        onePlayer.setSelected(false);
+        onePlayer.addActionListener(listener);
+        twoPlayer = new JRadioButton("Play against a Friend", null);
+        twoPlayer.setSelected(true);
+        twoPlayer.addActionListener(listener);
+        JLabel label1 = new JLabel("Please enter your game mode below");
+        JLabel label2 = new JLabel("Default is two player mode");
+        popup.add(label1);
+        popup.add(label2);
+        popup.add(onePlayer);
+        popup.add(twoPlayer);
+        JOptionPane.showMessageDialog(null, popup);
+
         undo = new JButton("Undo", null);
         undo.addActionListener(listener);
         add(boardpanel, BorderLayout.WEST);
@@ -227,6 +245,24 @@ public class ChessPanel extends JPanel {
                 return;
             }
 
+            if(onePlayer == event.getSource())  {
+                if(twoPlayer.isSelected())
+                    twoPlayer.setSelected(false);
+                if(onePlayer.isSelected())
+                    model.useAI(true);
+                else
+                    model.useAI(false);
+            }
+
+            if(twoPlayer == event.getSource())  {
+                if(onePlayer.isSelected())
+                    onePlayer.setSelected(false);
+                if(twoPlayer.isSelected())
+                    model.useAI(false);
+                else if(!twoPlayer.isSelected() && !onePlayer.isSelected())
+                    model.useAI(false);
+            }
+
             for (int r = 0; r < model.numRows(); r++)
                 for (int c = 0; c < model.numColumns(); c++)
                     if (board[r][c] == event.getSource()) {
@@ -244,14 +280,13 @@ public class ChessPanel extends JPanel {
                             firstTurnFlag = true;
                             Move m = new Move(fromRow, fromCol, toRow, toCol);
                             if ((model.isValidMove(m)) == true) {
-                                System.out.println("Here I am");
                                 if(model.pieceAt(fromRow, fromCol) != null) {
                                     if (model.pieceAt(fromRow, fromCol).player() == Player.WHITE) {
                                         if((toRow == 2) && (toRow == fromRow - 1) &&
                                                 ((toCol == fromCol+ 1) ||
                                                         (toCol == fromCol - 1))) {
                                             //if enPassant is legal
-                                            if(model.pieceAt(toRow, toCol).type().equals("Pawn"))
+                                            if(model.pieceAt(toRow+1, toCol).type().equals("Pawn"))
                                                 if (((Pawn) model.pieceAt(toRow + 1,toCol)).getFirstMove()) {
                                                     en_passant = true;
                                                     Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);

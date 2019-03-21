@@ -325,10 +325,25 @@ public class ChessModel implements IChessModel {
         return false;
     }
 
+    private boolean AIblackPieceInDanger()  {
+        for(int r=0; r<numRows(); r++)
+            for(int c=0; c<numColumns(); c++)
+                if(board[r][c] != null)
+                    if(board[r][c].player() == Player.WHITE)
+                        for(int x=0; x<numRows(); x++)
+                            for(int y=0; y<numColumns(); y++)
+                                if(board[x][y] != null)
+                                    if(board[x][y].player() == Player.BLACK)    {
+                                        Move m = new Move(r, c, x, y);
+                                        if(board[x][y].isValidMove(m, board))
+                                            return true;
+                                    }
+        return false;
+    }
+
     public boolean noMovesMade()    {
         return board.equals(startBoard);
     }
-
 
 
     public void useAI(boolean ai)  {
@@ -365,6 +380,10 @@ public class ChessModel implements IChessModel {
         }
 
         else if(AIcanPutWhiteInCheck()) {
+
+        }
+
+        else if(AIblackPieceInDanger()) {
 
         }
 
