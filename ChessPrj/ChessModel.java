@@ -31,8 +31,8 @@ public class ChessModel implements IChessModel {
         board[0][0] = new Rook(Player.BLACK);
         board[0][1] = new Knight(Player.BLACK);
         board[0][2] = new Bishop(Player.BLACK);
-        board[0][3] = new Queen(Player.BLACK);
-        board[0][4] = new King(Player.BLACK);
+        board[0][3] = new King(Player.BLACK);
+        board[0][4] = new Queen(Player.BLACK);
         board[0][5] = new Bishop(Player.BLACK);
         board[0][6] = new Knight (Player.BLACK);
         board[0][7] = new Rook(Player.BLACK);
@@ -45,7 +45,6 @@ public class ChessModel implements IChessModel {
         gameStatus = GUIcodes.NoMessage;
     }
 
-    //FIXME: Something ain't working right here
     public boolean isComplete() {
         if(currentPlayer() == Player.WHITE) {
             for(int r=0; r<numRows(); r++)
@@ -238,7 +237,7 @@ public class ChessModel implements IChessModel {
     public void saveBoard() {
         prevBoard.add(generateNewBoard());
     }
-    //FIXME: If you move, then undo to beginning, then move, undo again, it will put you to the last spot...
+
     public boolean goToLastBoard() {
         System.out.println(prevBoard.size());
         if((prevBoard.size() <=1) || ((prevBoard.size() == 2) && (hasUndoneToStart)))   {
@@ -329,6 +328,8 @@ public class ChessModel implements IChessModel {
     public boolean noMovesMade()    {
         return board.equals(startBoard);
     }
+
+
 
     public void useAI(boolean ai)  {
         if(ai)

@@ -8,8 +8,6 @@ public class ChessPanel extends JPanel {
 
     private JButton[][] board;
     private JButton undo;
-    private JRadioButton singlePlayer;
-    private JRadioButton doublePlayer;
     private ChessModel model;
 
     private ImageIcon wRook;
@@ -66,17 +64,9 @@ public class ChessPanel extends JPanel {
         }
         undo = new JButton("Undo", null);
         undo.addActionListener(listener);
-
-        singlePlayer = new JRadioButton("AI", null);
-        doublePlayer = new JRadioButton("2 Player", null);
-        singlePlayer.addActionListener(listener);
-        doublePlayer.addActionListener(listener);
-
         add(boardpanel, BorderLayout.WEST);
         boardpanel.setPreferredSize(new Dimension(600, 600));
         buttonpanel.add(undo);
-        buttonpanel.add(singlePlayer);
-        buttonpanel.add(doublePlayer);
         add(buttonpanel);
         firstTurnFlag = true;
     }
@@ -237,12 +227,6 @@ public class ChessPanel extends JPanel {
                 return;
             }
 
-            if(singlePlayer == event.getSource())   {
-                if(model.noMovesMade()) {
-
-                }
-            }
-
             for (int r = 0; r < model.numRows(); r++)
                 for (int c = 0; c < model.numColumns(); c++)
                     if (board[r][c] == event.getSource()) {
@@ -260,6 +244,7 @@ public class ChessPanel extends JPanel {
                             firstTurnFlag = true;
                             Move m = new Move(fromRow, fromCol, toRow, toCol);
                             if ((model.isValidMove(m)) == true) {
+                                System.out.println("Here I am");
                                 if(model.pieceAt(fromRow, fromCol) != null) {
                                     if (model.pieceAt(fromRow, fromCol).player() == Player.WHITE) {
                                         if((toRow == 2) && (toRow == fromRow - 1) &&
@@ -319,19 +304,17 @@ public class ChessPanel extends JPanel {
                                     if (currentPlayer == Player.BLACK) {
                                         if (toCol == fromCol - 2) {
                                             Move leftRookMove =
-                                                    new Move(0, 0, 0, 3);
+                                                    new Move(0, 0, 0, 2);
                                             model.move(leftRookMove);
                                         }
 
                                         if (toCol == fromCol + 2) {
                                             Move rightRookMove =
-                                                    new Move(0, 7, 0, 5);
+                                                    new Move(0, 7, 0, 4);
                                             model.move(rightRookMove);
                                         }
                                     }
                                 }
-
-                                currentPlayer = currentPlayer.next();
 
                                 if (model.inCheck(currentPlayer)) {
                                     Move newM = new Move(toRow, toCol, OgRow, OgCol);
@@ -340,6 +323,7 @@ public class ChessPanel extends JPanel {
                                 }
 
                                 displayBoard();
+                                currentPlayer = currentPlayer.next();
                                 if (model.inCheck(currentPlayer)) {
                                     if (model.isComplete()) {
                                         JOptionPane.showMessageDialog(null,
