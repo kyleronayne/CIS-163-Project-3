@@ -252,6 +252,7 @@ public class ChessPanel extends JPanel {
                     model.useAI(true);
                 else
                     model.useAI(false);
+                return;
             }
 
             if (twoPlayer == event.getSource()) {
@@ -261,6 +262,7 @@ public class ChessPanel extends JPanel {
                     model.useAI(false);
                 else if (!twoPlayer.isSelected() && !onePlayer.isSelected())
                     model.useAI(false);
+                return;
             }
             if(!model.AIisUsed())    {
                 for (int r = 0; r < model.numRows(); r++)
@@ -377,12 +379,101 @@ public class ChessPanel extends JPanel {
                             }
                         }
             }
-
             else if(model.AIisUsed())   {
-                if(currentPlayer == Player.WHITE)   {
-                    for(int r=0; r<model.numRows(); r++)
-                        for(int c=0; c<model.numColumns(); c++)
-                            if(firstTurnFlag);
+                boolean blackTurn = false;
+                if(currentPlayer == Player.WHITE) {
+                    System.out.println("White turn using AI");
+                    for (int r = 0; r < model.numRows(); r++)
+                        for (int c = 0; c < model.numColumns(); c++)
+                            if (board[r][c] == event.getSource()) {
+                                if (firstTurnFlag) {
+                                    if (model.pieceAt(r, c) != null) {
+                                        if (model.pieceAt(r, c).player() == currentPlayer) {
+                                            System.out.println("You've picked a piece");
+                                            fromRow = r;
+                                            fromCol = c;
+                                            firstTurnFlag = false;
+                                            blackTurn = false;
+                                        }
+                                    }
+                                } else {
+                                    toRow = r;
+                                    toCol = c;
+                                    firstTurnFlag = true;
+                                    Move m = new Move(fromRow, fromCol, toRow, toCol);
+                                    if ((model.isValidMove(m)) == true) {
+                                        if (model.pieceAt(fromRow, fromCol) != null) {
+                                            if ((toRow == 2) && (toRow == fromRow - 1) &&
+                                                    ((toCol == fromCol + 1) ||
+                                                            (toCol == fromCol - 1))) {
+                                                //if enPassant is legal
+                                                if (model.pieceAt(toRow + 1, toCol).type().equals("Pawn"))
+                                                    if (((Pawn) model.pieceAt(toRow + 1, toCol)).getFirstMove()) {
+                                                        en_passant = true;
+                                                        Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                        model.saveBoard();
+                                                        model.move(enPassant);
+                                                        m = new Move(fromRow, toCol, toRow, toCol);
+                                                    }
+                                            }
+                                        }
+                                        int OgCol = fromCol;
+                                        int OgRow = fromRow;
+                                        if (!en_passant)
+                                            model.saveBoard();
+                                        model.move(m);
+                                        en_passant = false;
+
+                                        if (model.pieceAt(r, c).type().equals("King")) {
+                                            if (currentPlayer == Player.WHITE) {
+                                                if (toCol == fromCol - 2) {
+                                                    Move leftRookMove = new Move(7, 0, 7, 3);
+                                                    model.move(leftRookMove);
+                                                }
+                                                if (toCol == fromCol + 2) {
+                                                    Move rightRookMove = new Move(7, 7, 7, 5);
+                                                    model.move(rightRookMove);
+                                                }
+                                            }
+                                        }
+
+                                        if (model.inCheck(currentPlayer)) {
+                                            Move newM = new Move(toRow, toCol, OgRow, OgCol);
+                                            model.move(newM);
+                                            return;
+                                        }
+
+                                        displayBoard();
+                                        currentPlayer = currentPlayer.next();
+                                        if (model.inCheck(currentPlayer)) {
+                                            if (model.isComplete()) {
+                                                JOptionPane.showMessageDialog(null, currentPlayer + " Has been CHECKMATED!\n" +
+                                                        "GAME OVER!");
+                                            } else {
+                                                JOptionPane.showMessageDialog(null, currentPlayer +
+                                                        " Is in Check!\n" + "Next move must get out of check!");
+                                            }
+                                        }
+                                    }
+                                    blackTurn = true;
+                                }
+                            }
+                }
+                if(blackTurn == true) {
+                    //FIXME: Here we will call the AI function in Model which should take care of MOVES
+                    model.AI();
+
+                    displayBoard();
+                    currentPlayer = currentPlayer.next();
+                    if (model.inCheck(currentPlayer)) {
+                        if (model.isComplete()) {
+                            JOptionPane.showMessageDialog(null, currentPlayer + " Has been CHECKMATED!\n" +
+                                    "GAME OVER!");
+                        } else {
+                            JOptionPane.showMessageDialog(null, currentPlayer +
+                                    " Is in Check!\n" + "Next move must get out of check!");
+                        }
+                    }
                 }
             }
         }

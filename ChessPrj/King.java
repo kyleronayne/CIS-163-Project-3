@@ -180,12 +180,11 @@ public class King extends ChessPiece {
             }
 
             if (this.player() == Player.BLACK) {
-                System.out.println(BkingMoved);
                 if (!BkingMoved) {
                     if(move.toColumn == move.fromColumn-2)  {
                         if(board[0][0] != null)
                             if(board[0][0].type().equals("Rook"))
-                                if(board[0][1] == null & board[0][2] == null) {
+                                if(board[0][1] == null && board[0][2] == null) {
                                     BkingMoved = true;
                                     valid = true;
                                 }

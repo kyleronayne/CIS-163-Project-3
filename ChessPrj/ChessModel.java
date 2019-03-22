@@ -239,7 +239,6 @@ public class ChessModel implements IChessModel {
     }
 
     public boolean goToLastBoard() {
-        System.out.println(prevBoard.size());
         if((prevBoard.size() <=1) || ((prevBoard.size() == 2) && (hasUndoneToStart)))   {
             prevBoard.clear();
             prevBoard.add(generateNewBoard(startBoard));

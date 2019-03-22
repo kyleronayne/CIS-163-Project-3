@@ -28,7 +28,6 @@ public abstract class ChessPiece implements IChessPiece {
 
         else if((move.toRow > boardSize-1) || (move.toRow < 0) ||
                 (move.toColumn > boardSize-1) || (move.toColumn < 0)) {
-            System.out.println(move.toRow +" "+ move.toColumn);
             return false;
             //FIXME: I think we need to throw an error but its not
             //working currently
