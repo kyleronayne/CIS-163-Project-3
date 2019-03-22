@@ -289,7 +289,7 @@ public class ChessPanel extends JPanel {
     private class listener implements ActionListener {
         /**************************************************************
          * Action Performed method that gets the current event and
-         * determines what is to happend with it.
+         * determines what is to happen with it.
          * @param event the current action that was attempted.
          *************************************************************/
         public void actionPerformed(ActionEvent event) {
