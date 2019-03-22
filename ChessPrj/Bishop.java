@@ -1,6 +1,11 @@
 package ChessPrj;
 import java.lang.*;
 
+/**********************************************************************
+ * Class that represents the Bishop chess piece. Determines whether a
+ * given move is valid in terms of how a Bishop should be able to move.
+ * assigns the Bishop to a player, and set's its type to "Bishop"
+ *********************************************************************/
 public class Bishop extends ChessPiece {
 
     /******************************************************************
