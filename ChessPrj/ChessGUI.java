@@ -4,6 +4,16 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
+/**********************************************************************
+ * A GUI that represents a chess game. Simply portrays the board and
+ * calls a panel which holds the fundamental rules and play of the
+ * game. This consists of two players, a functional AI, undo, and
+ * standard chess rules in terms of how pieces move and how to win
+ * the game.
+ *
+ * @author: Charlie Dorn, Kyle Ronayne, Brad Samack
+ * @version Winter 2019 CIS 163 v1.0
+ *********************************************************************/
 public class ChessGUI {
 
     public static void main(String[] args) {

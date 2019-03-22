@@ -260,6 +260,8 @@ public class King extends ChessPiece {
         }
 
         // Is he king trying to castle? (Special case)
+        //FIXME: Castling needs to check if the player is attempting to move through check, into check, or out of check
+        //FIXME: If we get time solve this.
         else if (move.toColumn == move.fromColumn - 2 ||
                 move.toColumn == move.fromColumn + 2) {
 
