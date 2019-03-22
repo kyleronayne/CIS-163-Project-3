@@ -1,5 +1,6 @@
 package ChessPrj;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**********************************************************************
  * ChessModel Class that represents the overall model of chess.
@@ -37,6 +38,8 @@ public class ChessModel implements IChessModel {
      * another human player */
     private boolean usingAI = false;
 
+    private Random random;
+
     /******************************************************************
      * Constructor for ChessModel that initializes the board, its
      * history, and starting state. Places all the chess pieces for
@@ -47,6 +50,7 @@ public class ChessModel implements IChessModel {
         board = new IChessPiece[8][8];
         prevBoard = new ArrayList<>();
         startBoard = new IChessPiece[8][8];
+        random = new Random();
         prevBoard.clear();
         player = Player.WHITE;
         board[7][0] = new Rook(Player.WHITE);
@@ -504,6 +508,18 @@ public class ChessModel implements IChessModel {
         return false;
     }
 
+    private boolean AIisThisSpotSafe(int row, int col)  {
+        for(int r=0; r<numRows(); r++)
+            for(int c=0; c<numColumns(); c++)
+                if(board[r][c] != null)
+                    if(board[r][c].player() == Player.WHITE)    {
+                        Move m = new Move(r, c, row, col);
+                        if(board[r][c].isValidMove(m, board))
+                            return false;
+                    }
+        return true;
+    }
+
     public boolean noMovesMade()    {
         return board.equals(startBoard);
     }
@@ -539,15 +555,121 @@ public class ChessModel implements IChessModel {
          *		i. check to see if that piece is in danger of being removed, if so, move a different piece.
          */
         if(inCheck(Player.BLACK))   {
+            for(int r=0; r<numRows(); r++)
+                for(int c=0; c<numColumns(); c++)
+                    if(board[r][c] != null)
+                        if(board[r][c].player() == Player.BLACK)
+                            for(int x=0; x<numRows(); x++)
+                                for(int y=0; y<numColumns(); y++)   {
+                                    Move m = new Move(r, c, x, y);
+                                    newPiece = null;
+                                    if(board[x][y] != null && board[x][y].player() == Player.WHITE) {
+                                        if(board[x][y].type().equals("King"))
+                                            newPiece = new King(Player.WHITE);
+                                        else if(board[x][y].type().equals("Queen"))
+                                            newPiece = new Queen(Player.WHITE);
+                                        else if(board[x][y].type().equals("Bishop"))
+                                            newPiece = new Bishop(Player.WHITE);
+                                        else if(board[x][y].type().equals("Rook"))
+                                            newPiece = new Rook(Player.WHITE);
+                                        else if(board[x][y].type().equals("Knight"))
+                                            newPiece = new Knight(Player.WHITE);
+                                        else if(board[x][y].type().equals("Pawn"))
+                                            newPiece = new Pawn(Player.WHITE);
+                                        else
+                                            newPiece = null;
+                                    }
+                                    if(board[r][c] != null)
+                                        if(board[r][c].isValidMove(m, board))
+                                            move(m);
 
+                                    if(inCheck(Player.BLACK))   {
+                                        Move newM = new Move(x, y, r, c);
+                                        move(newM);
+                                        board[x][y] = newPiece;
+                                    }
+                                }
         }
 
         else if(AIcanPutWhiteInCheck()) {
+            for(int r=0; r<numRows(); r++)
+                for(int c=0; c<numColumns(); c++)
+                    if(board[r][c] != null)
+                        if(board[r][c].player() == Player.BLACK)
+                            for(int x=0; x<numRows(); x++)
+                                for(int y=0; y<numRows(); y++)  {
+                                    Move m = new Move(r, c, x, y);
+                                    newPiece = null;
+                                    if(board[x][y] != null && board[x][y].player() == Player.WHITE) {
+                                        if(board[x][y].type().equals("King"))
+                                            newPiece = new King(Player.WHITE);
+                                        else if(board[x][y].type().equals("Queen"))
+                                            newPiece = new Queen(Player.WHITE);
+                                        else if(board[x][y].type().equals("Bishop"))
+                                            newPiece = new Bishop(Player.WHITE);
+                                        else if(board[x][y].type().equals("Rook"))
+                                            newPiece = new Rook(Player.WHITE);
+                                        else if(board[x][y].type().equals("Knight"))
+                                            newPiece = new Knight(Player.WHITE);
+                                        else if(board[x][y].type().equals("Pawn"))
+                                            newPiece = new Pawn(Player.WHITE);
+                                        else
+                                            newPiece = null;
+                                    }
+                                    if(board[r][c] != null)
+                                        if(board[r][c].isValidMove(m, board))   {
+                                            move(m);
+                                        }
 
+                                    if(!inCheck(Player.WHITE))  {
+                                        Move newM = new Move(x, y, r, c);
+                                        move(newM);
+                                        board[x][y] = newPiece;
+                                    }
+
+                                }
         }
 
         else if(AIblackPieceInDanger()) {
+            for(int r=0; r<numRows(); r++)
+                for(int c=0; c<numColumns(); c++)
+                    if(board[r][c] != null)
+                        if(board[r][c].player() == Player.BLACK)
+                            if(!AIisThisSpotSafe(r, c)) {
+                                for(int x=0; x<numRows(); x++)
+                                    for(int y=0; y<numColumns(); y++)   {
+                                        Move m = new Move(r, c, x, y);
+                                        if(board[r][c].isValidMove(m, board))
+                                            if(AIisThisSpotSafe(x, y))
+                                                move(m);
+                                    }
+                            }
+        }
 
+        else    {
+            int r = -1;
+            int c = -1;
+            int x = -1;
+            int y = -1;
+            boolean flag = true;
+            while(flag) {
+                r = random.nextInt(numRows());
+                c = random.nextInt(numColumns());
+                if(board[r][c] != null)
+                    if(board[r][c].player() == Player.BLACK)
+                        flag = false;
+            }
+
+            flag = true;
+            while(flag) {
+                x = random.nextInt(numRows());
+                y = random.nextInt(numColumns());
+                Move m = new Move(r, c, x, y);
+                if(board[r][c].isValidMove(m, board))   {
+                    move(m);
+                    flag = false;
+                }
+            }
         }
 
     }
