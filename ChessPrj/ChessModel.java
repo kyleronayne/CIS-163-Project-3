@@ -195,7 +195,8 @@ public class ChessModel implements IChessModel {
                                             newPiece = null;
                                     }
                                     move(m);
-                                    if(inCheck(currentPlayer().next())){
+                                    if(inCheck(currentPlayer().next()))
+                                    {
                                         move(m2);
                                         board[x][y] = newPiece;
                                     }
