@@ -4,42 +4,93 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+/**********************************************************************
+ * The panel for the chess board. Houses the bulk of everything that
+ * goes on visually in the game. Shows the actual movement of the
+ * pieces and displays messages for being in check, checkmated, and
+ * reverting to the previous board.
+ *********************************************************************/
 public class ChessPanel extends JPanel {
 
+    /** Creates a board of buttons */
     private JButton[][] board;
+
+    /** The undo button to take back ones turn*/
     private JButton undo;
+
+    /** Radio Button to represents playing against the AI */
     private JRadioButton onePlayer;
+
+    /** Radio Button to represents playing with 2 people */
     private JRadioButton twoPlayer;
+
+    /** The over all logic of the game of Chess */
     private ChessModel model;
 
+    /** The image for the White Rook */
     private ImageIcon wRook;
+
+    /** The image for the Black Rook */
     private ImageIcon bRook;
 
+    /** The image for the White Bishop */
     private ImageIcon wBishop;
+
+    /** The image for the Black Bishop */
     private ImageIcon bBishop;
 
+    /** The image for the White Queen */
     private ImageIcon wQueen;
+
+    /** The image for the Black Queen */
     private ImageIcon bQueen;
 
+    /** The image for the White King */
     private ImageIcon wKing;
+
+    /** THe image for the Black King */
     private ImageIcon bKing;
 
+    /** The image for the White Pawn */
     private ImageIcon wPawn;
+
+    /** The image for the Black Pawn */
     private ImageIcon bPawn;
 
+    /** The image for the White Knight */
     private ImageIcon wKnight;
+
+    /** The image for the Black Knight */
     private ImageIcon bKnight;
 
+    /** Boolean to determine if this is the first turn */
     private boolean firstTurnFlag;
+
+    /** fromRow to hold the current row before a move */
     private int fromRow;
+
+    /** toRow to hold the row being moved to */
     private int toRow;
+
+    /** fromCol to hold the current column before a move */
     private int fromCol;
+
+    /** toCol to hold the column being moved to */
     private int toCol;
+
+    /** The current player. White goes first */
     private Player currentPlayer = Player.WHITE;
+
+    /** Boolean to hold if en_Passant is possible */
     private boolean en_passant = false;
 
+    /** Listener to keep track of the players movements on the chess
+      board*/
     private listener listener;
 
+    /******************************************************************
+     * Constructor sets up the game logic, board, pieces, buttons, etc.
+     *****************************************************************/
     public ChessPanel() {
         model = new ChessModel();
         board = new JButton[model.numRows()][model.numColumns()];
@@ -151,8 +202,11 @@ public class ChessPanel extends JPanel {
         }
     }
 
+    /******************************************************************
+     * Creates the image icons for each piece. Uses the given files
+     * provided for the project.
+     *****************************************************************/
     private void createIcons() {
-        // Sets the Image for white player pieces
         wRook = new ImageIcon("ChessPrj/wRook.png");
         bRook = new ImageIcon("ChessPrj/bRook.png");
 
@@ -172,7 +226,11 @@ public class ChessPanel extends JPanel {
         bKnight = new ImageIcon("ChessPrj/bKnight.png");
 
     }
-    // method that updates the board
+
+    /******************************************************************
+     * Method that displays the board with the pieces at their
+     * specified space.
+     *****************************************************************/
     private void displayBoard() {
 
         for (int r = 0; r < 8; r++) {
@@ -224,8 +282,16 @@ public class ChessPanel extends JPanel {
         repaint();
     }
 
-    // inner class that represents action listener for buttons
+    /******************************************************************
+     * Inner class that represents the action listener and determines
+     * what is to happen when provided a given event.
+     *****************************************************************/
     private class listener implements ActionListener {
+        /**************************************************************
+         * Action Performed method that gets the current event and
+         * determines what is to happend with it.
+         * @param event the current action that was attempted.
+         *************************************************************/
         public void actionPerformed(ActionEvent event) {
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++) {
