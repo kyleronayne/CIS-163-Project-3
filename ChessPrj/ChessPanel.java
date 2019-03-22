@@ -448,14 +448,12 @@ public class ChessPanel extends JPanel {
             else if(model.AIisUsed())   {
                 boolean blackTurn = false;
                 if(currentPlayer == Player.WHITE) {
-                    System.out.println("White turn using AI");
                     for (int r = 0; r < model.numRows(); r++)
                         for (int c = 0; c < model.numColumns(); c++)
                             if (board[r][c] == event.getSource()) {
                                 if (firstTurnFlag) {
                                     if (model.pieceAt(r, c) != null) {
                                         if (model.pieceAt(r, c).player() == currentPlayer) {
-                                            System.out.println("You've picked a piece");
                                             fromRow = r;
                                             fromCol = c;
                                             firstTurnFlag = false;
