@@ -83,6 +83,22 @@ public class Pawn extends ChessPiece {
                 }
             }
 
+            // Check if the pawn is trying to move diagonally
+            else if ((move.toRow == move.fromRow - 1) &&
+                    ((move.toColumn == move.fromColumn + 1) ||
+                            (move.toColumn == move.fromColumn - 1))) {
+
+                /* Check if there is a piece of the opposite player
+                 at that place*/
+                try {
+                    if (board[move.toRow][move.toColumn].player() ==
+                            Player.BLACK) {
+                        validMove = true;
+                    }
+                } catch (NullPointerException e) {
+                }
+            }
+
             // In range for an enPassant maneuver?
             else if ((move.toRow == 2) &&
                     (move.toRow == move.fromRow - 1) &&
@@ -106,21 +122,6 @@ public class Pawn extends ChessPiece {
                             }
             }
 
-            // Check if the pawn is trying to move diagonally
-            else if ((move.toRow == move.fromRow - 1) &&
-                    ((move.toColumn == move.fromColumn + 1) ||
-                            (move.toColumn == move.fromColumn - 1))) {
-
-                /* Check if there is a piece of the opposite player
-                 at that place*/
-                try {
-                    if (board[move.toRow][move.toColumn].player() ==
-                            Player.BLACK) {
-                        validMove = true;
-                    }
-                } catch (NullPointerException e) {
-                }
-            }
         }
 
         // Does the pawn belong to the Black player?

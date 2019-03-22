@@ -40,10 +40,8 @@ public class ChessModel implements IChessModel {
 
     private Random random;
 
-    private int rowFrom;
-    private int colFrom;
-    private int rowTo;
-    private int colTo;
+    private int rowWKing;
+    private int colWKing;
 
     /******************************************************************
      * Constructor for ChessModel that initializes the board, its
@@ -589,6 +587,27 @@ public class ChessModel implements IChessModel {
          *d. Move a piece (pawns first) forward toward opponent king
          *		i. check to see if that piece is in danger of being removed, if so, move a different piece.
          */
+        for(int r=0; r<numRows(); r++)
+            for(int c=0; c<numColumns(); c++)
+                if(board[r][c] != null)
+                    if(board[r][c].type().equals("King"))
+                        if(board[r][c].player() == Player.WHITE)    {
+                            rowWKing = r;
+                            colWKing = c;
+                        }
+
+        for(int r=0; r<numRows(); r++)  {
+            for(int c=0; c<numColumns(); c++)   {
+                if(board[r][c] != null)
+                    if(board[r][c].player() == Player.BLACK)    {
+                        Move m = new Move(r, c, rowWKing, colWKing);
+                        if(board[r][c].isValidMove(m, board))   {
+                            move(m);
+                            return;
+                        }
+                    }
+            }
+        }
 
         if(inCheck(Player.BLACK))   {
                 for(int r=0; r<numRows(); r++){

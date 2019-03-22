@@ -354,14 +354,16 @@ public class ChessPanel extends JPanel {
                                                     ((toCol == fromCol + 1) ||
                                                             (toCol == fromCol - 1))) {
                                                 //if enPassant is legal
-                                                if (model.pieceAt(toRow + 1, toCol).type().equals("Pawn"))
-                                                    if (((Pawn) model.pieceAt(toRow + 1, toCol)).getFirstMove()) {
-                                                        en_passant = true;
-                                                        Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
-                                                        model.saveBoard();
-                                                        model.move(enPassant);
-                                                        m = new Move(fromRow, toCol, toRow, toCol);
-                                                    }
+                                                if (model.pieceAt(toRow + 1, toCol) != null)    {
+                                                    if (model.pieceAt(toRow + 1, toCol).type().equals("Pawn"))
+                                                        if (((Pawn) model.pieceAt(toRow + 1, toCol)).getFirstMove()) {
+                                                            en_passant = true;
+                                                            Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                            model.saveBoard();
+                                                            model.move(enPassant);
+                                                            m = new Move(fromRow, toCol, toRow, toCol);
+                                                        }
+                                            }
                                             }
                                         }
                                         else if (model.pieceAt(fromRow, fromCol) != null) {
@@ -370,14 +372,16 @@ public class ChessPanel extends JPanel {
                                                         ((toCol == fromCol + 1) ||
                                                                 (toCol == fromCol - 1))) {
                                                     //if enPassant is legal
-                                                    if (model.pieceAt(toRow - 1, toCol).type().equals("Pawn"))
-                                                        if (((Pawn) model.pieceAt(toRow - 1, toCol)).getFirstMove()) {
-                                                            en_passant = true;
-                                                            Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
-                                                            model.saveBoard();
-                                                            model.move(enPassant);
-                                                            m = new Move(fromRow, toCol, toRow, toCol);
-                                                        }
+                                                    if(model.pieceAt(toRow-1, toCol) != null) {
+                                                        if (model.pieceAt(toRow - 1, toCol).type().equals("Pawn"))
+                                                            if (((Pawn) model.pieceAt(toRow - 1, toCol)).getFirstMove()) {
+                                                                en_passant = true;
+                                                                Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                                model.saveBoard();
+                                                                model.move(enPassant);
+                                                                m = new Move(fromRow, toCol, toRow, toCol);
+                                                            }
+                                                    }
                                                 }
                                             }
                                         }
@@ -459,13 +463,15 @@ public class ChessPanel extends JPanel {
                                             firstTurnFlag = false;
                                             blackTurn = false;
                                         }
+                                        else return;
                                     }
+                                    else return;
                                 } else {
                                     toRow = r;
                                     toCol = c;
                                     firstTurnFlag = true;
                                     Move m = new Move(fromRow, fromCol, toRow, toCol);
-                                    if ((model.isValidMove(m)) == true) {
+                                    if ((model.isValidMove(m))) {
                                         if (model.pieceAt(fromRow, fromCol) != null) {
                                             if ((toRow == 2) && (toRow == fromRow - 1) &&
                                                     ((toCol == fromCol + 1) ||
@@ -518,6 +524,10 @@ public class ChessPanel extends JPanel {
                                                         " Is in Check!\n" + "Next move must get out of check!");
                                             }
                                         }
+                                    }
+                                    else    {
+                                        firstTurnFlag = true;
+                                        return;
                                     }
                                     blackTurn = true;
                                 }
