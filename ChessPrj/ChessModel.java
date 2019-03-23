@@ -64,8 +64,6 @@ public class ChessModel implements IChessModel {
         board[7][6] = new Knight (Player.WHITE);
         board[7][7] = new Rook(Player.WHITE);
 
-        //FIXME: BLACK KING SHOULD BE ON [0][4]
-        //FIXME: Black Queen SHOULD BE ON [0][3]
         board[0][0] = new Rook(Player.BLACK);
         board[0][1] = new Knight(Player.BLACK);
         board[0][2] = new Bishop(Player.BLACK);
@@ -111,34 +109,9 @@ public class ChessModel implements IChessModel {
                             if(pieceAt(r, c).isValidMove(m, board)){
                                 newPiece = null;
                                 // Is there a piece at x, y?
-                                if(pieceAt(x, y) != null)   {
-                                    // which piece is it?
-                                    if(pieceAt(x, y).type().
-                                            equals("King"))
-                                        newPiece = new King
-                                                (Player.BLACK);
-                                    else if(pieceAt(x, y).type().
-                                            equals("Queen"))
-                                        newPiece = new Queen
-                                                (Player.BLACK);
-                                    else if(pieceAt(x, y).type().
-                                            equals("Bishop"))
-                                        newPiece = new Bishop(
-                                                Player.BLACK);
-                                    else if(pieceAt(x, y).type().
-                                            equals("Knight"))
-                                        newPiece = new Knight
-                                                (Player.BLACK);
-                                    else if(pieceAt(x, y).type().
-                                            equals("Rook"))
-                                        newPiece = new Rook
-                                                (Player.BLACK);
-                                    else if(pieceAt(x, y).type().
-                                            equals("Pawn"))
-                                        newPiece = new Pawn
-                                                (Player.BLACK);
-                                    else
-                                        newPiece = null;
+                                if (board[x][y] != null) {
+                                    newPiece = newBPieceGen(
+                                            board[x][y]);
                                 }
                                 // Move to x, y
                                 move(m);
@@ -173,34 +146,9 @@ public class ChessModel implements IChessModel {
                                 if(pieceAt(r1, c1).isValidMove
                                         (m, board)){
                                     newPiece = null;
-                                    if(pieceAt(x, y) != null){
-                                        //Want a new white piece
-                                        if(pieceAt(x, y).type().
-                                                equals("King"))
-                                            newPiece = new King
-                                                    (Player.WHITE);
-                                        else if(pieceAt(x, y).type().
-                                                equals("Queen"))
-                                            newPiece = new Queen
-                                                    (Player.WHITE);
-                                        else if(pieceAt(x, y).type().
-                                                equals("Bishop"))
-                                            newPiece = new Bishop
-                                                    (Player.WHITE);
-                                        else if(pieceAt(x, y).type().
-                                                equals("Knight"))
-                                            newPiece = new Knight
-                                                    (Player.WHITE);
-                                        else if(pieceAt(x, y).type().
-                                                equals("Rook"))
-                                            newPiece = new Rook
-                                                    (Player.WHITE);
-                                        else if(pieceAt(x, y).type().
-                                                equals("Pawn"))
-                                            newPiece = new Pawn
-                                                    (Player.WHITE);
-                                        else
-                                            newPiece = null;
+                                    if (board[x][y] != null) {
+                                        newPiece = newPieceGen(
+                                                board[x][y]);
                                     }
                                     move(m);
                                     if(inCheck(currentPlayer().next())){
@@ -653,6 +601,28 @@ public class ChessModel implements IChessModel {
                 newPiece = new Rook(Player.WHITE);
             else if(cp.type().equals("Pawn"))
                 newPiece = new Pawn(Player.WHITE);
+            else
+                newPiece = null;
+        }
+        return newPiece;
+    }
+
+    public ChessPiece newBPieceGen(IChessPiece cp)  {
+        newPiece = null;
+        if(cp != null)   {
+            //Want a new white piece
+            if(cp.type().equals("King"))
+                newPiece = new King(Player.BLACK);
+            else if(cp.type().equals("Queen"))
+                newPiece = new Queen(Player.BLACK);
+            else if(cp.type().equals("Bishop"))
+                newPiece = new Bishop(Player.BLACK);
+            else if(cp.type().equals("Knight"))
+                newPiece = new Knight(Player.BLACK);
+            else if(cp.type().equals("Rook"))
+                newPiece = new Rook(Player.BLACK);
+            else if(cp.type().equals("Pawn"))
+                newPiece = new Pawn(Player.BLACK);
             else
                 newPiece = null;
         }
