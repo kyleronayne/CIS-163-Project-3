@@ -477,7 +477,7 @@ public class ChessModel implements IChessModel {
      * @param attack A boolean specifying whether a black piece
      * should attack a white piece
      * @return True when a black piece can attack a white piece
-     */
+     *****************************************************************/
     private boolean AIattack(boolean attack) {
 
         // True when a black piece can attack a white piece
@@ -548,7 +548,7 @@ public class ChessModel implements IChessModel {
     /******************************************************************
      * Returns true if a black piece can put a white piece in check
      * @return True if a black piece can put a white piece in check
-     */
+     *****************************************************************/
     private boolean AIcanPutWhiteInCheck()  {
 
         for(int r=0; r<numRows(); r++)
@@ -568,18 +568,30 @@ public class ChessModel implements IChessModel {
                                     newPiece = null;
                                     if(pieceAt(i, j) != null)   {
                                         //Want a new white piece
-                                        if(pieceAt(i, j).type().equals("King"))
-                                            newPiece = new King(Player.WHITE);
-                                        else if(pieceAt(i, j).type().equals("Queen"))
-                                            newPiece = new Queen(Player.WHITE);
-                                        else if(pieceAt(i, j).type().equals("Bishop"))
-                                            newPiece = new Bishop(Player.WHITE);
-                                        else if(pieceAt(i, j).type().equals("Knight"))
-                                            newPiece = new Knight(Player.WHITE);
-                                        else if(pieceAt(i, j).type().equals("Rook"))
-                                            newPiece = new Rook(Player.WHITE);
-                                        else if(pieceAt(i, j).type().equals("Pawn"))
-                                            newPiece = new Pawn(Player.WHITE);
+                                        if(pieceAt(i, j).type()
+                                                .equals("King"))
+                                            newPiece = new King(
+                                                    Player.WHITE);
+                                        else if(pieceAt(i, j).type()
+                                                .equals("Queen"))
+                                            newPiece = new Queen(
+                                                    Player.WHITE);
+                                        else if(pieceAt(i, j).type()
+                                                .equals("Bishop"))
+                                            newPiece = new Bishop(
+                                                    Player.WHITE);
+                                        else if(pieceAt(i, j).type()
+                                                .equals("Knight"))
+                                            newPiece = new Knight(
+                                                    Player.WHITE);
+                                        else if(pieceAt(i, j).type()
+                                                .equals("Rook"))
+                                            newPiece = new Rook(
+                                                    Player.WHITE);
+                                        else if(pieceAt(i, j).type()
+                                                .equals("Pawn"))
+                                            newPiece = new Pawn(
+                                                    Player.WHITE);
                                         else
                                             newPiece = null;
                                     }
@@ -611,7 +623,7 @@ public class ChessModel implements IChessModel {
      * attacked
      * @return True if a black piece is currently in danger of being
      * attacked
-     */
+     *****************************************************************/
     private boolean AIblackPieceInDanger()  {
         for(int r=0; r<numRows(); r++)  {
             for(int c=0; c<numColumns(); c++)   {
@@ -620,13 +632,15 @@ public class ChessModel implements IChessModel {
                         for(int x=0; x<numRows(); x++)  {
                             for(int y=0; y<numColumns(); y++)   {
                                 if(board[x][y] != null) {
-                                    if(board[x][y].player() == Player.BLACK) {
+                                    if(board[x][y].player() ==
+                                            Player.BLACK) {
                                         Move m = new Move(r, c, x, y);
 
                                         // If the move from a white
                                         // piece to a black piece is
                                         // valid
-                                        if (board[r][c].isValidMove(m, board)) {
+                                        if (board[r][c].isValidMove(
+                                                m, board)) {
                                             return true;
                                         }
                                     }
@@ -648,7 +662,7 @@ public class ChessModel implements IChessModel {
      * @param col An integer representing a column from the board
      * @return True if a white piece cannot move to a specified board
      * square
-     */
+     *****************************************************************/
     private boolean AIisThisSpotSafe(int row, int col)  {
         for(int r=0; r<numRows(); r++)
             for(int c=0; c<numColumns(); c++)
@@ -668,7 +682,7 @@ public class ChessModel implements IChessModel {
      * Sets usingAI to true if the user specified whether or not to
      * use the AI
      * @param ai Boolean denoting whether or not to use the AI
-     */
+     *****************************************************************/
     public void useAI(boolean ai)  {
         if(ai)
             usingAI = true;
@@ -680,7 +694,7 @@ public class ChessModel implements IChessModel {
     /******************************************************************
      * Returns true if the user specified to play against the AI
      * @return True if the user specified to play against the AI
-     */
+     *****************************************************************/
     public boolean AIisUsed()   {
         return usingAI;
     }
@@ -693,7 +707,7 @@ public class ChessModel implements IChessModel {
      * by the AI
      * @return A ChessPiece object representing a chess piece that
      * could potentially be taken by the AI
-     */
+     *****************************************************************/
     public ChessPiece newPieceGen(IChessPiece cp)  {
         newPiece = null;
         if(cp != null)   {
@@ -718,8 +732,9 @@ public class ChessModel implements IChessModel {
 
     /******************************************************************
      * Handles the execution of the AI helper methods, and determines
-     * the best move for the AI to make
-     */
+     * the best move for the AI to make depending on the current
+     * game board
+     *****************************************************************/
     public void AI() {
 
         /*First the AI determines the location the white players King*/
@@ -844,49 +859,68 @@ public class ChessModel implements IChessModel {
             return;
         }
 
+        //Checks to see if any of the Black Pieces are in Danger
         else if(AIblackPieceInDanger()) {
             for(int r=0; r<numRows(); r++)  {
-                for(int c=0; c<numColumns(); c++)   {
-                    if(board[r][c] != null) {
-                        if(board[r][c].player() == Player.BLACK)    {
-                            if(!AIisThisSpotSafe(r, c)) {
-                                for(int x=0; x<numRows(); x++)  {
-                                    for(int y=0; y<numColumns(); y++)   {
-                                        if(board[x][y] != null) {
-                                            if(board[x][y].player() == Player.WHITE)    {
-                                                Move m = new Move(r, c, x, y);
-                                                if(board[r][c].isValidMove(m, board))   {
-                                                    move(m);
-                                                    return;
-                                                }
-                                            }
-                                        }
-                                        else    {
-                                            Move m = new Move(r, c, x, y);
-                                            if(board[r][c].isValidMove(m, board))   {
-                                                move(m);
-                                                return;
-                                            }
+            for(int c=0; c<numColumns(); c++)   {
+                if(board[r][c] != null) {
+                    if(board[r][c].player() ==
+                            Player.BLACK)    {
+                        /*If the AI is not in a safe spot, it needs to
+                        be moved elsewhere*/
+                        if(!AIisThisSpotSafe(r, c)) {
+                            for(int x=0; x<numRows(); x++)  {
+                            for(int y=0; y<numColumns(); y++) {
+                                /*if the piece can move to take the
+                                piece that puts it in danger, do that*/
+                                if(board[x][y] != null) {
+                                    if(board[x][y].player() ==
+                                            Player.WHITE)    {
+                                        Move m=new Move(r, c, x, y);
+                                        if(board[r][c].isValidMove(m,
+                                                board)){
+                                            move(m);
+                                            return;
                                         }
                                     }
                                 }
+                                /*If the piece that is in danger can't
+                                go elsewhere, just move it*/
+                                else    {
+                                    Move m = new Move(r, c, x, y);
+                                    if(board[r][c].
+                                            isValidMove(m, board)){
+                                        move(m);
+                                        return;
+                                    }
+                                }
+                            }
                             }
                         }
                     }
                 }
             }
+            }
         }
 
-
+        /*If no AI moves have been made up to this point, a random move
+        must be made. This is done by combing through the board spots
+        and finding a AI piece to move, and then combing through and
+        finding a spot that the piece can validly move to*/
         if((prevBoard.size() % 2) == 0) {
+            /*If the move is an even move, it will check from right
+            to left for a valid piece to move*/
             for(int r=0; r<numRows(); r++)   {
                 for(int c=numColumns()-1; c>=0; c--)    {
                     if(board[r][c] != null) {
                         if(board[r][c].player() == Player.BLACK)    {
                             for(int x=numRows()-1; x>=0; x--)   {
                                 for(int y=0; y<numColumns(); y++)   {
+                                    /*Move the piece at (r, c) to the
+                                    location (x, y)*/
                                     Move m = new Move(r, c, x, y);
-                                    if(board[r][c].isValidMove(m, board))   {
+                                    if(board[r][c].
+                                            isValidMove(m, board))  {
                                         move(m);
                                         return;
                                     }
@@ -898,14 +932,19 @@ public class ChessModel implements IChessModel {
             }
         }
         else    {
+            /*If the move is an odd move, it will check from left to
+            right for a valid piece to move*/
             for(int r=0; r<numRows(); r++)  {
                 for(int c=0; c<numColumns(); c++)   {
                     if(board[r][c] != null) {
                         if(board[r][c].player() == Player.BLACK)    {
                             for(int x=0; x<numRows(); x++)  {
-                                for(int y=numColumns()-1; y>=0; y--)    {
+                                for(int y=numColumns()-1; y>=0; y--){
+                                    /*Move the piece at (r, c) to the
+                                    location (x, y)*/
                                     Move m = new Move(r, c, x, y);
-                                    if(board[r][c].isValidMove(m, board))   {
+                                    if(board[r][c].
+                                            isValidMove(m, board))  {
                                         move(m);
                                         return;
                                     }
