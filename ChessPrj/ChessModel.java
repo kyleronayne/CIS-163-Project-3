@@ -521,6 +521,11 @@ public class ChessModel implements IChessModel {
             return false;
         }
     }
+
+    /******************************************************************
+     * Returns true if a black piece can put a white piece in check
+     * @return True if a black piece can put a white piece in check
+     */
     private boolean AIcanPutWhiteInCheck()  {
 
         for(int r=0; r<numRows(); r++)
@@ -529,7 +534,12 @@ public class ChessModel implements IChessModel {
                     if(board[r][c].player() == Player.BLACK)    {
                         for(int i=0; i<numRows(); i++)
                             for(int j=0; j<numColumns(); j++)   {
+
+                                // Represents a black piece attack move
+                                // to a white piece
                                 Move m = new Move(r, c, i, j);
+
+                                // A move to undo the attack move
                                 Move m2 = new Move(i, j, r, c);
                                 if(board[r][c].isValidMove(m, board)) {
                                     newPiece = null;
@@ -551,6 +561,10 @@ public class ChessModel implements IChessModel {
                                             newPiece = null;
                                     }
                                     move(m);
+
+                                    // Checks to see if the black
+                                    // attack move puts the white
+                                    // player in check
                                     if(inCheck(Player.WHITE))   {
                                         move(m2);
                                         board[i][j] = newPiece;
@@ -564,10 +578,16 @@ public class ChessModel implements IChessModel {
                                 }
                             }
                     }
+
         return false;
     }
 
-
+    /******************************************************************
+     * Returns true if a black piece is currently in danger of being
+     * attacked
+     * @return True if a black piece is currently in danger of being
+     * attacked
+     */
     private boolean AIblackPieceInDanger()  {
         for(int r=0; r<numRows(); r++)  {
             for(int c=0; c<numColumns(); c++)   {
@@ -578,6 +598,10 @@ public class ChessModel implements IChessModel {
                                 if(board[x][y] != null) {
                                     if(board[x][y].player() == Player.BLACK) {
                                         Move m = new Move(r, c, x, y);
+
+                                        // If the move from a white
+                                        // piece to a black piece is
+                                        // valid
                                         if (board[r][c].isValidMove(m, board)) {
                                             return true;
                                         }
