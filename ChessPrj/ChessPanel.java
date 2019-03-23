@@ -392,42 +392,47 @@ public class ChessPanel extends JPanel {
                                         model.saveBoard();
                                     model.move(m);
                                     en_passant = false;
-
+                                    boolean KingCastled = false;
                                     if (model.pieceAt(r, c).type().equals("King")) {
                                         if (currentPlayer == Player.WHITE) {
                                             if (toCol == fromCol - 2) {
                                                 Move leftRookMove =
                                                         new Move(7, 0, 7, 3);
                                                 model.move(leftRookMove);
+                                                KingCastled = true;
                                             }
 
                                             if (toCol == fromCol + 2) {
                                                 Move rightRookMove =
                                                         new Move(7, 7, 7, 5);
                                                 model.move(rightRookMove);
+                                                KingCastled = true;
                                             }
                                         }
 
                                         if (currentPlayer == Player.BLACK) {
                                             if (toCol == fromCol - 2) {
                                                 Move leftRookMove =
-                                                        new Move(0, 0, 0, 2);
+                                                        new Move(0, 0, 0, 3);
                                                 model.move(leftRookMove);
+                                                KingCastled = true;
                                             }
 
                                             if (toCol == fromCol + 2) {
                                                 Move rightRookMove =
-                                                        new Move(0, 7, 0, 4);
+                                                        new Move(0, 7, 0, 5);
                                                 model.move(rightRookMove);
+                                                KingCastled = true;
                                             }
                                         }
                                     }
 
-                                    if (model.inCheck(currentPlayer)) {
+                                    if (model.inCheck(currentPlayer) && !KingCastled) {
                                         Move newM = new Move(toRow, toCol, OgRow, OgCol);
                                         model.move(newM);
                                         return;
                                     }
+                                    KingCastled = false;
 
                                     displayBoard();
                                     currentPlayer = currentPlayer.next();
@@ -477,6 +482,7 @@ public class ChessPanel extends JPanel {
                                                     ((toCol == fromCol + 1) ||
                                                             (toCol == fromCol - 1))) {
                                                 //if enPassant is legal
+                                                //FIXME: NULL POINTER EXCEPTION
                                                 if (model.pieceAt(toRow + 1, toCol).type().equals("Pawn"))
                                                     if (((Pawn) model.pieceAt(toRow + 1, toCol)).getFirstMove()) {
                                                         en_passant = true;

@@ -313,7 +313,8 @@ public class King extends ChessPiece {
                             if(board[0][0].type().equals("Rook"))
                                 // Verify no other pieces in between
                                 if(board[0][1] == null &&
-                                        board[0][2] == null) {
+                                        board[0][2] == null &&
+                                board[0][3] == null) {
                                     BkingMoved = true;
                                     valid = true;
                                 }
@@ -326,7 +327,7 @@ public class King extends ChessPiece {
                         if(board[0][7] != null)
                             if(board[0][7].type().equals("Rook"))
                                 // Verify no other pieces in between
-                                if(board[0][4]==null && board[0][5]
+                                if(board[0][5]
                                         == null && board[0][6]==null) {
                                     BkingMoved = true;
                                     valid = true;
