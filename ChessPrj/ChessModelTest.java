@@ -52,6 +52,19 @@ public class ChessModelTest {
         }
     }
 
+    // Tests player switches
+    @Test
+    public void test_nextPlayer() {
+        ChessModel test = new ChessModel();
+        Player currentPlayer;
+        // Tests 4 player switches
+        for (int i = 0; i < 4; i++) {
+            test.setNextPlayer();
+            currentPlayer = test.currentPlayer();
+            assertEquals(currentPlayer, test.currentPlayer());
+        }
+    }
+
     // Test Good movements for Black Player
     @Test
     public void test_Black_piece_Move() {
@@ -240,6 +253,9 @@ public class ChessModelTest {
         Move m = new Move(1,1,2,1);
         assertTrue(test.isValidMove(m));
         // 2 space forward from start
+        // Is this the pawns first move?
+        ((Pawn) test.pieceAt(1,1)).setFirstMove(true);
+        assert(((Pawn) test.pieceAt(1,1)).getFirstMove() == true);
         Move m2 = new Move (1,1,3,1);
         assertTrue(test.isValidMove(m2));
 
@@ -252,9 +268,17 @@ public class ChessModelTest {
             // Back to the Right?
         m3 = new Move (1,1,0,2);
         assertFalse(test.isValidMove(m3));
+        //cannot move diagonal with no piece there.
 
-        //assertTrue(test.pieceAt(2,1).type().equals("Pawn"));
-        //assertTrue(test.pieceAt(2,1).player() == Player.BLACK);
+        // Move white pawn for enPassant
+        Move p = new Move (6,0,3,0);
+        test.move(p);
+        test.move(m2);
+        // EnPassant should be possible
+        ((Pawn) test.pieceAt(3,1)).setFirstMove(true);
+        p = new Move (3,0,2,1);
+        assertTrue(test.isValidMove(p));
 
     }
+
 }
