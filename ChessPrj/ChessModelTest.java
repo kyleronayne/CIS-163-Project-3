@@ -311,6 +311,48 @@ public class ChessModelTest {
         assertEquals(test.goToLastBoard(), false);
     }
 
+    // Test Check and Checkmate for White Player
+    @Test
+    public void test_Check_and_Checkmate_White(){
+        // Shortest possible checkmate
+        ChessModel test = new ChessModel();
+        assertFalse(test.inCheck(Player.WHITE));
+        Move p1 = new Move(6,5,0,0);
+        Move p11 = new Move(6,6,0,0);
+        Move p2 = new Move(1,4,0,0);
+        Move q2 = new Move(0,3,4,7);
+        test.move(p1);
+        test.move(p2);
+        assertTrue(test.isValidMove(q2));
+        test.move(q2);
+        assertTrue(test.inCheck(Player.WHITE));
+        assertFalse(test.isComplete());
+        test.move(p11);
+        assertTrue(test.isComplete());
+    }
+
+    // Test Check and Checkmate for Black Player
+    @Test
+    public void test_Check_and_Checkmate_Black(){
+        // Shortest possible checkmate
+        ChessModel test = new ChessModel();
+        test.setNextPlayer();
+        assertFalse(test.inCheck(Player.BLACK));
+        Move p1 = new Move(1,5,0,0);
+        Move p11 = new Move(1,6,0,0);
+        Move p2 = new Move(6,4,0,0);
+        Move q2 = new Move(7,3,3,7);
+        test.move(p1);
+        test.move(p2);
+        assertTrue(test.isValidMove(q2));
+        test.move(q2);
+        assertTrue(test.inCheck(Player.BLACK));
+        assertFalse(test.isComplete());
+        test.move(p11);
+        assertTrue(test.isComplete());
+    }
+
+    // Testing Player Generation
     @Test
     public void test_PlayerGen() {
         ChessModel test = new ChessModel();
