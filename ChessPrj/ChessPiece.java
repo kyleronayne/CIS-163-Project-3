@@ -70,6 +70,10 @@ public abstract class ChessPiece implements IChessPiece {
 
         }
 
+        else if((board[move.fromRow][move.fromColumn]) == null) {
+            throw new IllegalArgumentException();
+        }
+
         /* Verifies that the player is not trying to put their piece
         on top of one of their other pieces */
         try {
