@@ -1,19 +1,23 @@
 package ChessPrj;
 
+/**********************************************************************
+ * Enum class that defines the Player color constraint
+ */
 public enum Player {
-    BLACK, WHITE;
+    // Denotes the black player
+    BLACK,
 
-    /**
-     * Return the {@code Player} whose turn is next.
-     *
-     * @return the {@code Player} whose turn is next
+    // Denotes the white player
+    WHITE;
+
+    /******************************************************************
+     * Returns the next Player constraint
+     * @return A constraint for the next Player
      */
     public Player next() {
         if (this == BLACK)
             return WHITE;
         else
             return BLACK;
-
-        //	return this == BLACK ? WHITE : BLACK;
     }
 }
