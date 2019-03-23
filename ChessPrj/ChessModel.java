@@ -384,19 +384,6 @@ public class ChessModel implements IChessModel {
         player = player.next();
     }
 
-
-    /******************************************************************
-     * Places a piece at the specified row and column on the board.
-     * @param row the row being looked at.
-     * @param column the column being looked at.
-     * @param piece the piece in question you want to place at that
-     * location.
-     *****************************************************************/
-    public void setPiece(int row, int column, IChessPiece piece) {
-        board[row][column] = piece;
-    }
-
-
     /******************************************************************
      * Saves the current board and adds it tho the list of
      * board history.

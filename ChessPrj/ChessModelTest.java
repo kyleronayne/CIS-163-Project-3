@@ -65,6 +65,15 @@ public class ChessModelTest {
         }
     }
 
+    // Test Move works
+    @Test
+    public void test_Move() {
+        Move test = new Move();
+        Move m = new Move(1,2,3,4);
+        assertTrue(m.toString().equals("Move [fromRow=1, fromColumn=2" +
+                ", toRow=3, toColumn=4]"));
+    }
+
     // Test Good movements for Black Player
     @Test
     public void test_Black_piece_Move() {
@@ -281,6 +290,7 @@ public class ChessModelTest {
 
     }
 
+    // Testing Castling Function
     @Test
     public void test_canCastle() {
         ChessModel test = new ChessModel();
@@ -295,5 +305,6 @@ public class ChessModelTest {
         Move kingMove = new Move(0, 4, 0, 2);
         assertTrue(test.isValidMove(kingMove));
     }
+
 
 }

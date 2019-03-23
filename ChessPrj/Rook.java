@@ -114,15 +114,6 @@ public class Rook extends ChessPiece {
             }
         }
         return valid&&superValid;
-
-    }
-
-    /******************************************************************
-     * Determines whether the rook has been moved
-     * @return rookMoved true if rook has moved, false otherwise.
-     *****************************************************************/
-    public boolean isRookMoved() {
-        return rookMoved;
     }
 }
 
