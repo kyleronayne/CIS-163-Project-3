@@ -104,7 +104,7 @@ public class Pawn extends ChessPiece {
             }
 
             // In range for an enPassant maneuver?
-            else if ((move.toRow == 2) &&
+            if ((move.toRow == 2) &&
                     (move.toRow == move.fromRow - 1) &&
                     ((move.toColumn == move.fromColumn + 1) ||
                             (move.toColumn == move.fromColumn - 1))) {
