@@ -450,32 +450,16 @@ public class ChessModel implements IChessModel {
         return copy;
     }
 
-    /******************************************************************
-     * Returns true when a black piece can attack a white piece
-     * @param attack A boolean specifying whether a black piece
-     * should attack a white piece
-     * @return True when a black piece can attack a white piece
-     */
     private boolean AIattack(boolean attack) {
-
-        // True when a black piece can attack a white piece
-        boolean canAttack = false;
+        boolean attacked = false;
         for (int row = 0; row < numRows(); row++) {
             for (int column = 0; column < numColumns(); column++) {
                 if (board[row][column] != null) {
-
-                    // Gets the row and column of a black piece
                     if (board[row][column].player() == Player.BLACK) {
-                        for (int toRow = 0; toRow < numRows();
-                             toRow++) {
-                            for (int toColumn = 0; toColumn <
-                                    numColumns(); toColumn++) {
+                        for (int toRow = 0; toRow < numRows(); toRow++) {
+                            for (int toColumn = 0; toColumn < numColumns(); toColumn++) {
                                 if (board[toRow][toColumn] != null) {
-
-                                    // Gets the row and column of a
-                                    // white piece
-                                    if (board[toRow][toColumn].player()
-                                            == Player.WHITE) {
+                                    if (board[toRow][toColumn].player() == Player.WHITE) {
                                         Move attackMove = new Move(row,
                                                 column, toRow,
                                                 toColumn);
@@ -483,22 +467,15 @@ public class ChessModel implements IChessModel {
                                                 new Move(toRow,
                                                         toColumn, row
                                                         , column);
-
-                                        // Checks to see if the
-                                        // attack move is valid
-                                        if (board[row][column].
-                                                isValidMove(attackMove,
-                                                        board)) {
-                                            canAttack = true;
-
-                                            // If the boolean
-                                            // parameter is true,
-                                            // then attack
+                                        if (board[row][column].isValidMove(attackMove, board)) {
+                                            attacked = true;
+                                            System.out.println("Can " +
+                                                    "Attack!");
                                             if (attack) {
                                                 move(attackMove);
-
-                                                if (inCheck(Player.
-                                                        BLACK)) {
+                                                System.out.println(
+                                                        "Attacked!");
+                                                if (inCheck(Player.BLACK)) {
                                                     move(undoAttack);
                                                 }
                                                 return true;
@@ -514,7 +491,7 @@ public class ChessModel implements IChessModel {
             }
         }
 
-        if (canAttack) {
+        if (attacked) {
             return true;
         }
         else {
@@ -743,10 +720,7 @@ public class ChessModel implements IChessModel {
             }
         }
 
-        // Checks to see if a black piece can attack a white piece
         if (AIattack(false)) {
-
-            // Attacks a white piece
             AIattack(true);
             return;
         }

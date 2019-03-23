@@ -8,13 +8,11 @@ package ChessPrj;
  *********************************************************************/
 public class King extends ChessPiece {
 
-
     /** Variable to state whether the White king has moved */
     private boolean WkingMoved;
 
     /** Variable to state whether the Black king has moved */
     private boolean BkingMoved;
-
 
     /******************************************************************
      * Constructor for the king class. Assigns the king piece to the
@@ -28,7 +26,6 @@ public class King extends ChessPiece {
         BkingMoved = false;
     }
 
-
     /******************************************************************
      * Specifies the chess pieces type. In this case the piece is a
      * King assigning the piece to it.
@@ -37,7 +34,6 @@ public class King extends ChessPiece {
     public String type() {
         return "King";
     }
-
 
     /******************************************************************
      * Determines whether the attempted move is valid. Checking that
@@ -264,6 +260,8 @@ public class King extends ChessPiece {
         }
 
         // Is he king trying to castle? (Special case)
+        //FIXME: Castling needs to check if the player is attempting to move through check, into check, or out of check
+        //FIXME: If we get time solve this.
         else if (move.toColumn == move.fromColumn - 2 ||
                 move.toColumn == move.fromColumn + 2) {
 
