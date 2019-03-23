@@ -296,19 +296,4 @@ public class ChessModelTest {
         assertTrue(test.isValidMove(kingMove));
     }
 
-    @Test
-    public void test_Undo() {
-        ChessModel test = new ChessModel();
-
-        Move knightMove = new Move(0, 0, 5, 5);
-        Move bishopMove = new Move(0, 2, 1, 3);
-        assertEquals(test.goToLastBoard(), true);
-        test.move(knightMove);
-        test.saveBoard();
-        test.move(bishopMove);
-        test.saveBoard();
-        assertEquals(test.goToLastBoard(), false);
-
-    }
-
 }

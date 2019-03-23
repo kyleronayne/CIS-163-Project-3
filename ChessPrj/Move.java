@@ -3,7 +3,7 @@ package ChessPrj;
 /***********************************************************************
  * Creates an object for a ChessPiece's move specifications. Details
  * a move's from row and column as well as the to row and column.
- */
+ *********************************************************************/
 public class Move {
 
 
@@ -22,7 +22,7 @@ public class Move {
 
     /******************************************************************
      * The default constructor
-     */
+     *****************************************************************/
     public Move() {
     }
 
@@ -35,7 +35,7 @@ public class Move {
      * from
      * @param toRow The row in which a chess piece is moving to
      * @param toColumn The column in which a chess piece is moving to
-     */
+     *****************************************************************/
     public Move(int fromRow, int fromColumn, int toRow, int toColumn) {
         this.fromRow = fromRow;
         this.fromColumn = fromColumn;
@@ -47,7 +47,7 @@ public class Move {
     /******************************************************************
      * Returns a String that details a Move's specifications
      * @return A String that details a Move's specifications
-     */
+     *****************************************************************/
     @Override
     public String toString() {
         return "Move [fromRow=" + fromRow + ", fromColumn=" +

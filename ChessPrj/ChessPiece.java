@@ -13,12 +13,6 @@ public abstract class ChessPiece implements IChessPiece {
     /** The size of a chess board */
     private int boardSize = 8;
 
-    //FIXME: Do we still need these??
-    private int wKingRow;
-    private int wKingCol;
-    private int bKingRow;
-    private int bKingCol;
-
     /******************************************************************
      * Constructor that assigns the owner to the chess piece.
      * @param player the player to whom this piece belongs.

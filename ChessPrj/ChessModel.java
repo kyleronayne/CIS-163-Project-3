@@ -11,7 +11,6 @@ import java.util.ArrayList;
  *********************************************************************/
 public class ChessModel implements IChessModel {
 
-
     /** Represents the chess board */
     private IChessPiece[][] board;
 
@@ -43,7 +42,6 @@ public class ChessModel implements IChessModel {
 
     /** Represents the column of the white player's king */
     private int colWKing;
-
 
     /******************************************************************
      * Constructor for ChessModel that initializes the board, its
@@ -84,7 +82,6 @@ public class ChessModel implements IChessModel {
         startBoard = generateNewBoard();
         gameStatus = GUIcodes.NoMessage;
     }
-
 
     /******************************************************************
      * Determines whether the king has been checkmated and sets the
@@ -225,7 +222,6 @@ public class ChessModel implements IChessModel {
         return true;
     }
 
-
     /******************************************************************
      * Checks if the move being attempted is a valid move in chess.
      * @param move a {@link ChessPrj.Move} object describing the move
@@ -242,7 +238,6 @@ public class ChessModel implements IChessModel {
         return valid;
     }
 
-
     /******************************************************************
      * Set's a players toRow and toColumn equal to the fromRow
      * fromColumn, and sets their from to Null. Then sets the player
@@ -256,7 +251,6 @@ public class ChessModel implements IChessModel {
         board[move.fromRow][move.fromColumn] = null;
         player = player.next();
     }
-
 
     /******************************************************************
      * Determines whether the specific player has been put in check
@@ -308,7 +302,6 @@ public class ChessModel implements IChessModel {
         return player;
     }
 
-
     /******************************************************************
      * The number of rows in a game of chess.
      * @return the amount of rows that exist in chess.
@@ -317,7 +310,6 @@ public class ChessModel implements IChessModel {
         return 8;
     }
 
-
     /*****************************************************************
      * The number of columns in a game of chess.
      * @return the amount of columns that exist in chess.
@@ -325,7 +317,6 @@ public class ChessModel implements IChessModel {
     public int numColumns() {
         return 8;
     }
-
 
     /******************************************************************
      * Gets the piece at the current row and column on the board.
@@ -336,7 +327,6 @@ public class ChessModel implements IChessModel {
     public IChessPiece pieceAt(int row, int column) {
         return board[row][column];
     }
-
 
     /******************************************************************
      * Changes the player to the next player.
@@ -352,7 +342,6 @@ public class ChessModel implements IChessModel {
     public void saveBoard() {
         prevBoard.add(generateNewBoard());
     }
-
 
     /******************************************************************
      * Reverts to the previous board that is stored in the list
@@ -399,7 +388,6 @@ public class ChessModel implements IChessModel {
         return copy;
     }
 
-
     /******************************************************************
      * Copies a specific board to a copy that places everything where
      * the copy has stuff placed.
@@ -418,7 +406,6 @@ public class ChessModel implements IChessModel {
             }
         return copy;
     }
-
 
     /******************************************************************
      * Returns true when a black piece can attack a white piece
@@ -492,7 +479,6 @@ public class ChessModel implements IChessModel {
         }
     }
 
-
     /******************************************************************
      * Returns true if a black piece can put a white piece in check
      * @return True if a black piece can put a white piece in check
@@ -565,7 +551,6 @@ public class ChessModel implements IChessModel {
         return false;
     }
 
-
     /******************************************************************
      * Returns true if a black piece is currently in danger of being
      * attacked
@@ -602,7 +587,6 @@ public class ChessModel implements IChessModel {
         return false;
     }
 
-
     /******************************************************************
      * Returns true if a white piece cannot move to a specified board
      * square
@@ -625,7 +609,6 @@ public class ChessModel implements IChessModel {
         return true;
     }
 
-
     /******************************************************************
      * Sets usingAI to true if the user specified whether or not to
      * use the AI
@@ -638,7 +621,6 @@ public class ChessModel implements IChessModel {
             usingAI = false;
     }
 
-
     /******************************************************************
      * Returns true if the user specified to play against the AI
      * @return True if the user specified to play against the AI
@@ -646,7 +628,6 @@ public class ChessModel implements IChessModel {
     public boolean AIisUsed()   {
         return usingAI;
     }
-
 
     /******************************************************************
      * Saves a copy of a specified chess piece that could be
