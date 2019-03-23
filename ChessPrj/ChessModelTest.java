@@ -311,4 +311,35 @@ public class ChessModelTest {
         assertEquals(test.goToLastBoard(), false);
     }
 
+    @Test
+    public void test_PlayerGen() {
+        ChessModel test = new ChessModel();
+
+        IChessPiece npK = new King(Player.WHITE);
+        IChessPiece npQ = new Queen(Player.WHITE);
+        IChessPiece npB = new Bishop(Player.WHITE);
+        IChessPiece npR = new Rook(Player.WHITE);
+        IChessPiece npKN = new Knight(Player.WHITE);
+        IChessPiece npP = new Pawn(Player.WHITE);
+
+        IChessPiece newPiece;
+        newPiece = test.newPieceGen(npK);
+        assertTrue(newPiece.type().equals("King"));
+
+        newPiece = test.newPieceGen(npQ);
+        assertTrue(newPiece.type().equals("Queen"));
+
+        newPiece = test.newPieceGen(npB);
+        assertTrue(newPiece.type().equals("Bishop"));
+
+        newPiece = test.newPieceGen(npR);
+        assertTrue(newPiece.type().equals("Rook"));
+
+        newPiece = test.newPieceGen(npKN);
+        assertTrue(newPiece.type().equals("Knight"));
+
+        newPiece = test.newPieceGen(npP);
+        assertTrue(newPiece.type().equals("Pawn"));
+    }
+
 }
