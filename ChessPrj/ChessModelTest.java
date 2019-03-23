@@ -281,4 +281,19 @@ public class ChessModelTest {
 
     }
 
+    @Test
+    public void test_canCastle() {
+        ChessModel test = new ChessModel();
+
+        Move knightMove = new Move(0, 1, 2, 0);
+        test.move(knightMove);
+        Move bishopMove = new Move(0, 2, 1, 3);
+        test.move(bishopMove);
+        Move queenMove = new Move(0, 3, 1, 3);
+        test.move(queenMove);
+
+        Move kingMove = new Move(0, 4, 0, 2);
+        assertTrue(test.isValidMove(kingMove));
+    }
+
 }
