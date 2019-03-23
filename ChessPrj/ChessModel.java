@@ -64,8 +64,6 @@ public class ChessModel implements IChessModel {
         board[7][6] = new Knight (Player.WHITE);
         board[7][7] = new Rook(Player.WHITE);
 
-        //FIXME: BLACK KING SHOULD BE ON [0][4]
-        //FIXME: Black Queen SHOULD BE ON [0][3]
         board[0][0] = new Rook(Player.BLACK);
         board[0][1] = new Knight(Player.BLACK);
         board[0][2] = new Bishop(Player.BLACK);
