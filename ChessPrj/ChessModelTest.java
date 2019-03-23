@@ -279,18 +279,10 @@ public class ChessModelTest {
         p = new Move (3,0,2,1);
         assertTrue(test.isValidMove(p));
 
-        p = new Move(6,7,4,7);
-        test.move(p);
-        p = new Move(1,6,4,6);
-        test.move(p);
-        ((Pawn) test.pieceAt(4,7)).setFirstMove(true);
-        p = new Move (4,6,5,7);
-        assertTrue(test.isValidMove(p));
     }
 
-    // Test Castling
     @Test
-    public void test_castling() {
+    public void test_canCastle() {
         ChessModel test = new ChessModel();
 
         Move knightMove = new Move(0, 1, 2, 0);
@@ -304,7 +296,6 @@ public class ChessModelTest {
         assertTrue(test.isValidMove(kingMove));
     }
 
-    // Test Undo
     @Test
     public void test_Undo() {
         ChessModel test = new ChessModel();
@@ -320,45 +311,35 @@ public class ChessModelTest {
         assertEquals(test.goToLastBoard(), false);
     }
 
-    // Test Check and Checkmate for White Player
     @Test
-    public void test_Check_and_Checkmate_White(){
-        // Shortest possible checkmate
+    public void test_PlayerGen() {
         ChessModel test = new ChessModel();
-        assertFalse(test.inCheck(Player.WHITE));
-        Move p1 = new Move(6,5,0,0);
-        Move p11 = new Move(6,6,0,0);
-        Move p2 = new Move(1,4,0,0);
-        Move q2 = new Move(0,3,4,7);
-        test.move(p1);
-        test.move(p2);
-        assertTrue(test.isValidMove(q2));
-        test.move(q2);
-        assertTrue(test.inCheck(Player.WHITE));
-        assertFalse(test.isComplete());
-        test.move(p11);
-        assertTrue(test.isComplete());
-    }
 
-    // Test Check and Checkmate for Black Player
-    @Test
-    public void test_Check_and_Checkmate_Black(){
-        // Shortest possible checkmate
-        ChessModel test = new ChessModel();
-        test.setNextPlayer();
-        assertFalse(test.inCheck(Player.BLACK));
-        Move p1 = new Move(1,5,0,0);
-        Move p11 = new Move(1,6,0,0);
-        Move p2 = new Move(6,4,0,0);
-        Move q2 = new Move(7,3,3,7);
-        test.move(p1);
-        test.move(p2);
-        assertTrue(test.isValidMove(q2));
-        test.move(q2);
-        assertTrue(test.inCheck(Player.BLACK));
-        assertFalse(test.isComplete());
-        test.move(p11);
-        assertTrue(test.isComplete());
+        IChessPiece npK = new King(Player.WHITE);
+        IChessPiece npQ = new Queen(Player.WHITE);
+        IChessPiece npB = new Bishop(Player.WHITE);
+        IChessPiece npR = new Rook(Player.WHITE);
+        IChessPiece npKN = new Knight(Player.WHITE);
+        IChessPiece npP = new Pawn(Player.WHITE);
+
+        IChessPiece newPiece;
+        newPiece = test.newPieceGen(npK);
+        assertTrue(newPiece.type().equals("King"));
+
+        newPiece = test.newPieceGen(npQ);
+        assertTrue(newPiece.type().equals("Queen"));
+
+        newPiece = test.newPieceGen(npB);
+        assertTrue(newPiece.type().equals("Bishop"));
+
+        newPiece = test.newPieceGen(npR);
+        assertTrue(newPiece.type().equals("Rook"));
+
+        newPiece = test.newPieceGen(npKN);
+        assertTrue(newPiece.type().equals("Knight"));
+
+        newPiece = test.newPieceGen(npP);
+        assertTrue(newPiece.type().equals("Pawn"));
     }
 
 }
