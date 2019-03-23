@@ -12,6 +12,7 @@ import java.util.Random;
  *********************************************************************/
 public class ChessModel implements IChessModel {
 
+
     /** Represents the chess board */
     private IChessPiece[][] board;
 
@@ -38,9 +39,10 @@ public class ChessModel implements IChessModel {
      * another human player */
     private boolean usingAI = false;
 
-    private Random random;
-
+    /** Represents the row of the white player's king */
     private int rowWKing;
+
+    /** Represents the column of the white player's king */
     private int colWKing;
 
 
@@ -54,7 +56,6 @@ public class ChessModel implements IChessModel {
         board = new IChessPiece[8][8];
         prevBoard = new ArrayList<>();
         startBoard = new IChessPiece[8][8];
-        random = new Random();
         prevBoard.clear();
         player = Player.WHITE;
         board[7][0] = new Rook(Player.WHITE);
@@ -407,9 +408,7 @@ public class ChessModel implements IChessModel {
 
 
     /******************************************************************
-     * Reverts to the previous board that is stored in the list.
-     * FIXME: Need a way to save the move made to, so we can undo check and allow castling to be reattempted.
-     * FIXME: Currently works in a simple state add functionality if there's time.
+     * Reverts to the previous board that is stored in the list
      * @return true if there is a board history, false otherwise.
      *****************************************************************/
     public boolean goToLastBoard() {
@@ -447,6 +446,7 @@ public class ChessModel implements IChessModel {
             }
         return copy;
     }
+
 
     /******************************************************************
      * Copies a specific board to a copy that places everything where
@@ -634,6 +634,7 @@ public class ChessModel implements IChessModel {
         return false;
     }
 
+
     /******************************************************************
      * Returns true if a white piece cannot move to a specified board
      * square
@@ -646,7 +647,9 @@ public class ChessModel implements IChessModel {
         for(int r=0; r<numRows(); r++)
             for(int c=0; c<numColumns(); c++)
                 if(board[r][c] != null)
-                    if(board[r][c].player() == Player.WHITE)    {
+                    if(board[r][c].player() == Player.WHITE) {
+
+                        // Represents a white piece move
                         Move m = new Move(r, c, row, col);
                         if(board[r][c].isValidMove(m, board))
                             return false;
@@ -655,20 +658,36 @@ public class ChessModel implements IChessModel {
     }
 
 
+    /******************************************************************
+     * Sets usingAI to true if the user specified whether or not to
+     * use the AI
+     * @param ai Boolean denoting whether or not to use the AI
+     */
     public void useAI(boolean ai)  {
         if(ai)
             usingAI = true;
         else
             usingAI = false;
-
     }
 
 
+    /******************************************************************
+     * Returns true if the user specified to play against the AI
+     * @return True if the user specified to play against the AI
+     */
     public boolean AIisUsed()   {
         return usingAI;
     }
 
 
+    /******************************************************************
+     * Saves a copy of a specified chess piece that could be
+     * potentially taken by the AI
+     * @param cp A ChessPiece object that could be potentially taken
+     * by the AI
+     * @return A ChessPiece object representing a chess piece that
+     * could potentially be taken by the AI
+     */
     public ChessPiece determineWhatPieceToMake(IChessPiece cp)  {
         newPiece = null;
         if(cp != null)   {
@@ -691,25 +710,11 @@ public class ChessModel implements IChessModel {
         return newPiece;
     }
 
-
+    /******************************************************************
+     * Handles the execution of the AI helper methods, and determines
+     * the best move for the AI to make
+     */
     public void AI() {
-        /*
-         * Write a simple AI set of rules in the following order.
-         * a. Check to see if you are in check.
-         * 		i. If so, get out of check by moving the king or placing a piece to block the check
-         *
-         * b. Attempt to put opponent into check (or checkmate).
-         * 		i. Attempt to put opponent into check without losing your piece
-         *		ii. Perhaps you have won the game.
-         *
-         *c. Determine if any of your pieces are in danger,
-         *		i. Move them if you can.
-         *		ii. Attempt to protect that piece.
-         *
-         *d. Move a piece (pawns first) forward toward opponent king
-         *		i. check to see if that piece is in danger of being removed, if so, move a different piece.
-         */
-
         for(int r=0; r<numRows(); r++)
             for(int c=0; c<numColumns(); c++)
                 if(board[r][c] != null)
