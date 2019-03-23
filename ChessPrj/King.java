@@ -260,13 +260,15 @@ public class King extends ChessPiece {
         }
 
         // Is he king trying to castle? (Special case)
-        if (move.toColumn == move.fromColumn - 2 ||
+        //FIXME: Castling needs to check if the player is attempting to move through check, into check, or out of check
+        //FIXME: If we get time solve this.
+        else if (move.toColumn == move.fromColumn - 2 ||
                 move.toColumn == move.fromColumn + 2) {
-            System.out.println("Attempting to castle with " + player());
+
             // Is this the white player?
             if (this.player() == Player.WHITE) {
                 // Has the king moved yet?
-                if ((BkingMoved ^ WkingMoved) || (!WkingMoved&&!BkingMoved)) {
+                if (!WkingMoved) {
 
                     // Are they attempting a castle from the right?
                     if(move.toColumn == move.fromColumn +2) {
@@ -299,9 +301,9 @@ public class King extends ChessPiece {
             }
 
             // Is this the black player?
-            else if (this.player() == Player.BLACK) {
+            if (this.player() == Player.BLACK) {
                 // Has the king moved yet?
-                if ((BkingMoved ^ WkingMoved) || (!WkingMoved&&!BkingMoved)) {
+                if (!BkingMoved) {
 
                     // Attempting to castle to the left?
                     if(move.toColumn == move.fromColumn-2)  {

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
+
 /**********************************************************************
  * The panel for the chess board. Houses the bulk of everything that
  * goes on visually in the game. Shows the actual movement of the
@@ -12,19 +13,20 @@ import javax.swing.*;
  *********************************************************************/
 public class ChessPanel extends JPanel {
 
-    /** Creates a board of buttons */
+
+    /** Represents a board of JButtons */
     private JButton[][] board;
 
-    /** The undo button to take back ones turn*/
+    /** The undo button to undo a turn*/
     private JButton undo;
 
-    /** Radio Button to represents playing against the AI */
+    /** Radio Button to represent playing against the AI */
     private JRadioButton onePlayer;
 
-    /** Radio Button to represents playing with 2 people */
+    /** Radio Button to represent playing with 2 people */
     private JRadioButton twoPlayer;
 
-    /** The over all logic of the game of Chess */
+    /** The chess game logic */
     private ChessModel model;
 
     /** The image for the White Rook */
@@ -66,16 +68,16 @@ public class ChessPanel extends JPanel {
     /** Boolean to determine if this is the first turn */
     private boolean firstTurnFlag;
 
-    /** fromRow to hold the current row before a move */
+    /** Represents the current row before a move */
     private int fromRow;
 
-    /** toRow to hold the row being moved to */
+    /** Represents the row being moved to */
     private int toRow;
 
-    /** fromCol to hold the current column before a move */
+    /** Represents the current column before a move */
     private int fromCol;
 
-    /** toCol to hold the column being moved to */
+    /** Represents the column being moved to */
     private int toCol;
 
     /** The current player. White goes first */
@@ -88,9 +90,10 @@ public class ChessPanel extends JPanel {
       board*/
     private listener listener;
 
+
     /******************************************************************
      * Constructor sets up the game logic, board, pieces, buttons, etc.
-     *****************************************************************/
+     */
     public ChessPanel() {
         model = new ChessModel();
         board = new JButton[model.numRows()][model.numColumns()];
@@ -101,29 +104,34 @@ public class ChessPanel extends JPanel {
         JPanel buttonpanel = new JPanel();
         JPanel popup = new JPanel();
         popup.setLayout(new BoxLayout(popup, BoxLayout.Y_AXIS));
-        boardpanel.setLayout(new GridLayout(model.numRows(), model.numColumns(), 1, 1));
+        boardpanel.setLayout(new GridLayout(model.numRows(),
+                model.numColumns(), 1, 1));
 
         for (int r = 0; r < model.numRows(); r++) {
             for (int c = 0; c < model.numColumns(); c++) {
                 if (model.pieceAt(r, c) == null) {
                     board[r][c] = new JButton("", null);
                     board[r][c].addActionListener(listener);
-                } else if (model.pieceAt(r, c).player() == Player.WHITE)
+                } else if (model.pieceAt(r, c).player() ==
+                        Player.WHITE)
                     placeWhitePieces(r, c);
-                else if(model.pieceAt(r, c).player() == Player.BLACK)
+                else if(model.pieceAt(r, c).player() ==
+                        Player.BLACK)
                     placeBlackPieces(r, c);
 
                 setBackGroundColor(r, c);
                 boardpanel.add(board[r][c]);
             }
         }
-        onePlayer = new JRadioButton("Play against the Computer", null);
+        onePlayer = new JRadioButton("Play against the Computer",
+                null);
         onePlayer.setSelected(false);
         onePlayer.addActionListener(listener);
         twoPlayer = new JRadioButton("Play against a Friend", null);
         twoPlayer.setSelected(true);
         twoPlayer.addActionListener(listener);
-        JLabel label1 = new JLabel("Please enter your game mode below");
+        JLabel label1 = new JLabel(
+                "Please enter your game mode below");
         JLabel label2 = new JLabel("Default is two player mode");
         popup.add(label1);
         popup.add(label2);
@@ -140,14 +148,34 @@ public class ChessPanel extends JPanel {
         firstTurnFlag = true;
     }
 
+
+    /******************************************************************
+     * Sets each square on game board to either light gray or white,
+     * depending on its location
+     * @param r An integer representing a row from the board
+     * @param c An integer representing a column from the board
+     */
     private void setBackGroundColor(int r, int c) {
+
+        // If the board square is odd, the JButton's background will
+        // be set to light gray
         if ((c % 2 == 1 && r % 2 == 0) || (c % 2 == 0 && r % 2 == 1)) {
             board[r][c].setBackground(Color.LIGHT_GRAY);
-        } else if ((c % 2 == 0 && r % 2 == 0) || (c % 2 == 1 && r % 2 == 1)) {
+        }
+
+        // If the board square is even, the JButton's background will
+        // be set to white
+        else if ((c % 2 == 0 && r % 2 == 0) || (c % 2 == 1 &&
+                r % 2 == 1)) {
             board[r][c].setBackground(Color.WHITE);
         }
     }
 
+    /******************************************************************
+     * Sets the icons corresponding to each white piece
+     * @param r An integer representing a row from the board
+     * @param c An integer representing a column from the board
+     */
     private void placeWhitePieces(int r, int c) {
         if (model.pieceAt(r, c).type().equals("Pawn")) {
             board[r][c] = new JButton(null, wPawn);
@@ -175,6 +203,12 @@ public class ChessPanel extends JPanel {
         }
     }
 
+
+    /******************************************************************
+     * Sets the icons corresponding to each black piece
+     * @param r An integer representing a row from the board
+     * @param c An integer representing a column from the board
+     */
     private void placeBlackPieces(int r, int c) {
         if (model.pieceAt(r, c).type().equals("Pawn")) {
             board[r][c] = new JButton(null, bPawn);
@@ -238,6 +272,9 @@ public class ChessPanel extends JPanel {
                 if (model.pieceAt(r, c) == null)
                     board[r][c].setIcon(null);
                 else    {
+
+                    // Displays the corresponding image icons for the
+                    // white pieces
                     if (model.pieceAt(r, c).player() == Player.WHITE) {
                         if (model.pieceAt(r, c).type().equals("Pawn"))
                             board[r][c].setIcon(wPawn);
@@ -245,32 +282,42 @@ public class ChessPanel extends JPanel {
                         if (model.pieceAt(r, c).type().equals("Rook"))
                             board[r][c].setIcon(wRook);
 
-                        if (model.pieceAt(r, c).type().equals("Knight"))
+                        if (model.pieceAt(r, c).type().
+                                equals("Knight"))
                             board[r][c].setIcon(wKnight);
 
-                        if (model.pieceAt(r, c).type().equals("Bishop"))
+                        if (model.pieceAt(r, c).type().
+                                equals("Bishop"))
                             board[r][c].setIcon(wBishop);
 
-                        if (model.pieceAt(r, c).type().equals("Queen"))
+                        if (model.pieceAt(r, c).type().
+                                equals("Queen"))
                             board[r][c].setIcon(wQueen);
 
                         if (model.pieceAt(r, c).type().equals("King"))
                             board[r][c].setIcon(wKing);
                     }
-                    else if(model.pieceAt(r, c).player() == Player.BLACK)   {
+
+                    // Displays the corresponding image icons for the
+                    // black pieces
+                    else if(model.pieceAt(r, c).player() ==
+                            Player.BLACK)   {
                         if(model.pieceAt(r, c).type().equals("Pawn"))
                             board[r][c].setIcon(bPawn);
 
                         if (model.pieceAt(r, c).type().equals("Rook"))
                             board[r][c].setIcon(bRook);
 
-                        if (model.pieceAt(r, c).type().equals("Knight"))
+                        if (model.pieceAt(r, c).type().
+                                equals("Knight"))
                             board[r][c].setIcon(bKnight);
 
-                        if (model.pieceAt(r, c).type().equals("Bishop"))
+                        if (model.pieceAt(r, c).type().
+                                equals("Bishop"))
                             board[r][c].setIcon(bBishop);
 
-                        if (model.pieceAt(r, c).type().equals("Queen"))
+                        if (model.pieceAt(r, c).type().
+                                equals("Queen"))
                             board[r][c].setIcon(bQueen);
 
                         if (model.pieceAt(r, c).type().equals("King"))
@@ -279,6 +326,8 @@ public class ChessPanel extends JPanel {
 
                 }
         }
+
+        // Updates the board
         repaint();
     }
 
@@ -296,9 +345,12 @@ public class ChessPanel extends JPanel {
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++) {
                     if (model.pieceAt(i, j) != null)
-                        if (model.pieceAt(i, j).player() == currentPlayer)
-                            if (model.pieceAt(i, j).type().equals("Pawn"))
-                                ((Pawn) model.pieceAt(i, j)).setFirstMove(false);
+                        if (model.pieceAt(i, j).player() ==
+                                currentPlayer)
+                            if (model.pieceAt(i, j).type().
+                                    equals("Pawn"))
+                                ((Pawn) model.pieceAt(i, j)).
+                                        setFirstMove(false);
                 }
 
             if (undo == event.getSource()) {
@@ -326,7 +378,8 @@ public class ChessPanel extends JPanel {
                     onePlayer.setSelected(false);
                 if (twoPlayer.isSelected())
                     model.useAI(false);
-                else if (!twoPlayer.isSelected() && !onePlayer.isSelected())
+                else if (!twoPlayer.isSelected() &&
+                        !onePlayer.isSelected())
                     model.useAI(false);
                 return;
             }
@@ -336,7 +389,8 @@ public class ChessPanel extends JPanel {
                         if (board[r][c] == event.getSource()) {
                             if (firstTurnFlag) {
                                 if (model.pieceAt(r, c) != null) {
-                                    if (model.pieceAt(r, c).player() == currentPlayer) {
+                                    if (model.pieceAt(r, c).player() ==
+                                            currentPlayer) {
                                         fromRow = r;
                                         fromCol = c;
                                         firstTurnFlag = false;

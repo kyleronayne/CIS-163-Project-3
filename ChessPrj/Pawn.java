@@ -10,8 +10,10 @@ package ChessPrj;
  *********************************************************************/
 public class Pawn extends ChessPiece {
 
+
     /** A boolean to represent whether it is the pawns first move */
     public boolean firstMove = false;
+
 
     /******************************************************************
      * Constructor for Pawn that specifies which player owns the pawn.
@@ -20,6 +22,7 @@ public class Pawn extends ChessPiece {
     public Pawn(Player player) {
         super(player);
     }
+
 
     /******************************************************************
      * Method to assign the chess piece a specific type in this case
@@ -30,6 +33,7 @@ public class Pawn extends ChessPiece {
     public String type() {
         return "Pawn";
     }
+
 
     /******************************************************************
      * Determines whether the specified move is valid for a pawn to
@@ -190,6 +194,7 @@ public class Pawn extends ChessPiece {
         return validMove&&superValid;
     }
 
+
     /******************************************************************
      * Method that holds whether the move made was the pawns first move
      * @return firstMove true if the pawn just made a double move,
@@ -198,6 +203,7 @@ public class Pawn extends ChessPiece {
     public boolean getFirstMove()   {
         return firstMove;
     }
+
 
     /******************************************************************
      * Method that sets the pawns first move variable

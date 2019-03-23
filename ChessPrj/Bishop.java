@@ -26,6 +26,7 @@ public class Bishop extends ChessPiece {
         return "Bishop";
     }
 
+
     /******************************************************************
      * Returns a boolean representing whether the specified Move is
      * valid
@@ -50,42 +51,54 @@ public class Bishop extends ChessPiece {
 
         /* Is the attempted move a diagonal movement. Does the piece
          change the same number of rows and columns*/
-        if((Math.abs(move.fromRow - move.toRow) == Math.abs(move.fromColumn - move.toColumn))) {
+        if((Math.abs(move.fromRow - move.toRow) == Math.abs(move.
+                fromColumn - move.toColumn))) {
             valid = true;
 
             // Attempted move is up and to the left
-            if((move.fromRow > move.toRow) && (move.fromColumn > move.toColumn)) {
-                for(int i=1; i<Math.abs(move.fromRow - move.toRow); i++)    {
-                    if(!(board[move.fromRow-i][move.fromColumn-i] == null))
+            if((move.fromRow > move.toRow) && (move.fromColumn >
+                    move.toColumn)) {
+                for(int i=1; i<Math.abs(move.fromRow - move.toRow);
+                    i++) {
+                    if(!(board[move.fromRow-i][move.fromColumn-i] ==
+                            null))
                         return false;
                 }
             }
 
             // Attempted move is down and to the right
-            else if((move.fromRow < move.toRow) && (move.fromColumn < move.toColumn)) {
-                for(int i=1; i<Math.abs(move.fromRow - move.toRow); i++)    {
-                    if(!(board[move.fromRow+i][move.fromColumn+i] == null))
+            else if((move.fromRow < move.toRow) && (move.fromColumn <
+                    move.toColumn)) {
+                for(int i=1; i<Math.abs(move.fromRow - move.toRow);
+                    i++) {
+                    if(!(board[move.fromRow+i][move.fromColumn+i] ==
+                            null))
                         return false;
                 }
             }
 
             // Attempted move is up and to the right
-            else if((move.fromRow > move.toRow) && (move.fromColumn < move.toColumn)) {
-                for(int i=1; i<Math.abs(move.fromRow - move.toRow); i++)    {
-                    if(!(board[move.fromRow-i][move.fromColumn+i] == null))
+            else if((move.fromRow > move.toRow) && (move.fromColumn <
+                    move.toColumn)) {
+                for(int i=1; i<Math.abs(move.fromRow - move.toRow);
+                    i++) {
+                    if(!(board[move.fromRow-i][move.fromColumn+i] ==
+                            null))
                         return false;
                 }
             }
 
             // Attempted move is down and to the left
-            else if((move.fromRow < move.toRow) && (move.fromColumn > move.toColumn)) {
-                for(int i=1; i<Math.abs(move.fromRow - move.toRow); i++)    {
-                    if(!(board[move.fromRow+i][move.fromColumn-i] == null))
+            else if((move.fromRow < move.toRow) && (move.fromColumn >
+                    move.toColumn)) {
+                for(int i=1; i<Math.abs(move.fromRow - move.toRow);
+                    i++) {
+                    if(!(board[move.fromRow+i][move.fromColumn-i] ==
+                            null))
                         return false;
                 }
             }
         }
-
 
         return valid&&superValid;
     }
