@@ -482,15 +482,17 @@ public class ChessPanel extends JPanel {
                                                     ((toCol == fromCol + 1) ||
                                                             (toCol == fromCol - 1))) {
                                                 //if enPassant is legal
-                                                //FIXME: NULL POINTER EXCEPTION
-                                                if (model.pieceAt(toRow + 1, toCol).type().equals("Pawn"))
-                                                    if (((Pawn) model.pieceAt(toRow + 1, toCol)).getFirstMove()) {
-                                                        en_passant = true;
-                                                        Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
-                                                        model.saveBoard();
-                                                        model.move(enPassant);
-                                                        m = new Move(fromRow, toCol, toRow, toCol);
+                                                if (model.pieceAt(toRow + 1, toCol) != null) {
+                                                    if (model.pieceAt(toRow + 1, toCol).type().equals("Pawn")) {
+                                                        if (((Pawn) model.pieceAt(toRow + 1, toCol)).getFirstMove()) {
+                                                            en_passant = true;
+                                                            Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                            model.saveBoard();
+                                                            model.move(enPassant);
+                                                            m = new Move(fromRow, toCol, toRow, toCol);
+                                                        }
                                                     }
+                                                }
                                             }
                                         }
                                         int OgCol = fromCol;

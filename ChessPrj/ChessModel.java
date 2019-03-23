@@ -450,6 +450,54 @@ public class ChessModel implements IChessModel {
         return copy;
     }
 
+    private boolean AIattack(boolean attack) {
+        boolean attacked = false;
+        for (int row = 0; row < numRows(); row++) {
+            for (int column = 0; column < numColumns(); column++) {
+                if (board[row][column] != null) {
+                    if (board[row][column].player() == Player.BLACK) {
+                        for (int toRow = 0; toRow < numRows(); toRow++) {
+                            for (int toColumn = 0; toColumn < numColumns(); toColumn++) {
+                                if (board[toRow][toColumn] != null) {
+                                    if (board[toRow][toColumn].player() == Player.WHITE) {
+                                        Move attackMove = new Move(row,
+                                                column, toRow,
+                                                toColumn);
+                                        Move undoAttack =
+                                                new Move(toRow,
+                                                        toColumn, row
+                                                        , column);
+                                        if (board[row][column].isValidMove(attackMove, board)) {
+                                            attacked = true;
+                                            System.out.println("Can " +
+                                                    "Attack!");
+                                            if (attack) {
+                                                move(attackMove);
+                                                System.out.println(
+                                                        "Attacked!");
+                                                if (inCheck(Player.BLACK)) {
+                                                    move(undoAttack);
+                                                }
+                                                return true;
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (attacked) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
     private boolean AIcanPutWhiteInCheck()  {
 
         for(int r=0; r<numRows(); r++)
@@ -589,6 +637,7 @@ public class ChessModel implements IChessModel {
          *d. Move a piece (pawns first) forward toward opponent king
          *		i. check to see if that piece is in danger of being removed, if so, move a different piece.
          */
+
         for(int r=0; r<numRows(); r++)
             for(int c=0; c<numColumns(); c++)
                 if(board[r][c] != null)
@@ -671,6 +720,11 @@ public class ChessModel implements IChessModel {
             }
         }
 
+        if (AIattack(false)) {
+            AIattack(true);
+            return;
+        }
+
         else if(AIblackPieceInDanger()) {
             for(int r=0; r<numRows(); r++)  {
                 for(int c=0; c<numColumns(); c++)   {
@@ -703,6 +757,7 @@ public class ChessModel implements IChessModel {
                 }
             }
         }
+
 
         if((prevBoard.size() % 2) == 0) {
             for(int r=0; r<numRows(); r++)   {
