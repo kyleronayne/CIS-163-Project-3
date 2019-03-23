@@ -52,6 +52,19 @@ public class ChessModelTest {
         }
     }
 
+    // Tests player switches
+    @Test
+    public void test_nextPlayer() {
+        ChessModel test = new ChessModel();
+        Player currentPlayer;
+        // Tests 4 player switches
+        for (int i = 0; i < 4; i++) {
+            test.setNextPlayer();
+            currentPlayer = test.currentPlayer();
+            assertEquals(currentPlayer, test.currentPlayer());
+        }
+    }
+
     // Test Good movements for Black Player
     @Test
     public void test_Black_piece_Move() {
@@ -267,4 +280,5 @@ public class ChessModelTest {
         assertTrue(test.isValidMove(p));
 
     }
+
 }
