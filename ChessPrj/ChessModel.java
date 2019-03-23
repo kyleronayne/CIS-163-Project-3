@@ -1,6 +1,5 @@
 package ChessPrj;
 import java.util.ArrayList;
-import java.util.Random;
 
 /**********************************************************************
  * ChessModel Class that represents the overall model of chess.
@@ -412,6 +411,8 @@ public class ChessModel implements IChessModel {
      * @return true if there is a board history, false otherwise.
      *****************************************************************/
     public boolean goToLastBoard() {
+        /*If the board is in the starting state, set the player to
+        WHITE, and reset the board to start*/
         if((prevBoard.size() <=1) || ((prevBoard.size() == 2) &&
                 (hasUndoneToStart)))   {
             prevBoard.clear();
@@ -422,6 +423,8 @@ public class ChessModel implements IChessModel {
             return true;
         }
 
+        /*If the board is not in the starting state, set the player to
+        next, and set the board to the previous state*/
         else  {
             board = prevBoard.get(prevBoard.size()-1);
             prevBoard.remove(prevBoard.size()-1);
@@ -429,7 +432,6 @@ public class ChessModel implements IChessModel {
             return false;
         }
     }
-
 
     /******************************************************************
      * Generates a new board and places the pieces at the same place
@@ -439,6 +441,8 @@ public class ChessModel implements IChessModel {
     private IChessPiece[][] generateNewBoard()  {
         IChessPiece[][] copy = new IChessPiece[8][8];
 
+        /*Copy all of the pieces at location (i, j) ON THE CURRENT
+         GAME BOARD into the new copy of the array*/
         for(int i=0; i<numRows(); i++)
             for(int j=0; j<numColumns(); j++) {
                 if(board[i][j] != null)
@@ -457,6 +461,8 @@ public class ChessModel implements IChessModel {
     private IChessPiece[][] generateNewBoard(IChessPiece[][] arrayToCopy)  {
         IChessPiece[][] copy = new IChessPiece[8][8];
 
+        /*Copy all of the pieces at location (i, j) on a SPECIFIED BOARD
+        into the new copy of the array*/
         for(int i=0; i<numRows(); i++)
             for(int j=0; j<numColumns(); j++) {
                 if(arrayToCopy[i][j] != null)
@@ -688,7 +694,7 @@ public class ChessModel implements IChessModel {
      * @return A ChessPiece object representing a chess piece that
      * could potentially be taken by the AI
      */
-    public ChessPiece determineWhatPieceToMake(IChessPiece cp)  {
+    public ChessPiece newPieceGen(IChessPiece cp)  {
         newPiece = null;
         if(cp != null)   {
             //Want a new white piece
@@ -715,6 +721,8 @@ public class ChessModel implements IChessModel {
      * the best move for the AI to make
      */
     public void AI() {
+
+        /*First the AI determines the location the white players King*/
         for(int r=0; r<numRows(); r++)
             for(int c=0; c<numColumns(); c++)
                 if(board[r][c] != null)
@@ -724,6 +732,8 @@ public class ChessModel implements IChessModel {
                             colWKing = c;
                         }
 
+        /*Once the White king location has been determined,
+         the AI checks to see if it can take that king*/
         for(int r=0; r<numRows(); r++)  {
             for(int c=0; c<numColumns(); c++)   {
                 if(board[r][c] != null)
@@ -737,36 +747,51 @@ public class ChessModel implements IChessModel {
             }
         }
 
+        /*If the AI cannot attack the WHITE king, it checks to see if
+        the
+        AI is in check */
         if(inCheck(Player.BLACK))   {
                 for(int r=0; r<numRows(); r++){
-                    for(int c=0; c<numColumns(); c++)   {
-                        if(board[r][c] != null) {
-                            if(board[r][c].player() == Player.BLACK)    {
-                                for(int x=0; x<numRows(); x++)  {
-                                    for(int y=0; y<numColumns(); y++)   {
-                                        Move m = new Move(r, c, x, y);
-                                        if(board[r][c].isValidMove(m, board))   {
-                                            newPiece = null;
-                                            if(board[x][y] != null) {
-                                                newPiece = determineWhatPieceToMake(board[x][y]);
-                                            }
-                                            move(m);
-                                            if(inCheck(Player.BLACK))   {
-                                                Move m2 = new Move(x, y, r, c);
-                                                move(m2);
-                                                board[x][y] = newPiece;
-                                            }
-                                            else
-                                                return;
+                for(int c=0; c<numColumns(); c++)   {
+                    if(board[r][c] != null) {
+                        if (board[r][c].player() == Player.BLACK) {
+                            for (int x = 0; x < numRows(); x++) {
+                                for (int y = 0; y < numColumns(); y++){
+                                    Move m = new Move(r, c, x, y);
+                                /*If the AI is in check, it sees if
+                                any of it's pieces can make a move
+                                to get out of check*/
+                                    if (board[r][c].
+                                            isValidMove(m, board)){
+                                        newPiece = null;
+                                        if (board[x][y] != null) {
+                                            newPiece = newPieceGen(
+                                                    board[x][y]);
                                         }
+                                        move(m);
+                                        /*If after the move, BLACK is
+                                        still in check, revert the move
+                                        and replace any piece that may
+                                        have been there*/
+                                        if (inCheck(Player.BLACK)) {
+                                            Move m2 = new Move(x, y, r, c);
+                                            move(m2);
+                                            board[x][y] = newPiece;
+                                        }
+                                        /*If the move resulted in
+                                        getting out of check, return*/
+                                        else
+                                            return;
                                     }
                                 }
                             }
                         }
                     }
                 }
+                }
         }
 
+        /*If the AI is not in check, see if it can put WHITE in check*/
         else if(AIcanPutWhiteInCheck()) {
             for(int r= 0; r<numRows(); r++) {
                 for(int c=0; c<numColumns(); c++)   {
@@ -774,18 +799,32 @@ public class ChessModel implements IChessModel {
                         if(board[r][c].player() == Player.BLACK)    {
                             for(int x=0; x<numRows(); x++)  {
                                 for(int y=0; y<numColumns(); y++)   {
+                                    /*See if the AI can make any move
+                                    that will put WHITE in check*/
                                     Move m = new Move(r, c, x, y);
-                                    if(board[r][c].isValidMove(m, board))   {
+
+                                    /*If the move is valid, move*/
+                                    if(board[r][c].
+                                            isValidMove(m, board)){
                                         newPiece = null;
                                         if(board[x][y] != null) {
-                                            newPiece = determineWhatPieceToMake(board[x][y]);
+                                            newPiece = newPieceGen(
+                                                    board[x][y]);
                                         }
                                         move(m);
+                                        /*If the WHITE player is not in
+                                        check, revert the move and
+                                        replace the piece that was
+                                        there*/
                                         if(!inCheck(Player.WHITE))   {
-                                            Move m2 = new Move(x, y, r, c);
+                                            Move m2 = new Move(
+                                                    x,y,r,c);
                                             move(m2);
                                             board[x][y] = newPiece;
                                         }
+
+                                        /*If the move sets WHITE into
+                                        check, return*/
                                         else
                                             return;
                                     }

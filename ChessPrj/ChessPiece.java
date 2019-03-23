@@ -57,7 +57,6 @@ public abstract class ChessPiece implements IChessPiece {
         if (((move.fromRow == move.toRow) &&
                 (move.fromColumn == move.toColumn)))
             return false;
-        //FIXME: NEED TO DOUBLE CHECK FOR INVALID ARGUMENT
 
         // Verifies that the move is being made on the board.
         else if((move.fromRow > boardSize -1) || (move.fromRow < 0) ||
