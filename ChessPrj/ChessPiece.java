@@ -60,12 +60,13 @@ public abstract class ChessPiece implements IChessPiece {
         //FIXME: NEED TO DOUBLE CHECK FOR INVALID ARGUMENT
 
         // Verifies that the move is being made on the board.
-        else if((move.toRow > boardSize-1) || (move.toRow < 0) ||
+        else if((move.fromRow > boardSize -1) || (move.fromRow < 0) ||
+                (move.fromColumn > boardSize -1) ||
+                (move.fromColumn < 0) ||
+                (move.toRow > boardSize-1) || (move.toRow < 0) ||
                 (move.toColumn > boardSize-1) || (move.toColumn < 0)) {
-            return false;
-            //FIXME: I think we need to throw an error but its not
-            //working currently
-            //throw new IndexOutOfBoundsException();
+
+            throw new IndexOutOfBoundsException();
 
         }
 
