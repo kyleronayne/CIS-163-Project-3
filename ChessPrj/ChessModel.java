@@ -300,45 +300,6 @@ public class ChessModel implements IChessModel {
         return false;
     }
 
-
-    /******************************************************************
-     * Determine whether the king is in check in at the specified row
-     * and col that they are now in.
-     * @param p the current player
-     * @param row the row being looked at
-     * @param col the column being looked at
-     * @return true if the player is in check, false otherwise.
-     *****************************************************************/
-    public boolean inCheck(Player p, int row, int col) {
-        // The kings row and column
-        int kingRow = row;
-        int kingCol = col;
-
-        /* Loop through rows and columns and check if you can take the
-         king */
-        for(int r=0; r<numRows(); r++)
-            for(int c=0; c<numColumns(); c++)
-                if(pieceAt(r, c) != null) {
-                    if (pieceAt(r, c).player() == p.next()) {
-                            Move move = new
-                                    Move(r, c, kingRow, kingCol);
-                            if (pieceAt(r, c).isValidMove
-                                    (move, board)){
-                                gameStatus = GUIcodes.inCheck;
-                                return true;
-                            }
-                    }
-                }
-        return false;
-    }
-
-    //FIXME: Are we going to use this?
-    public boolean canCastle() {
-        Move kingMove = new Move(7, 4, 7, 2);
-        return isValidMove(kingMove);
-    }
-
-
     /*****************************************************************
      * Gets the current player
      * @return the current player
@@ -383,19 +344,6 @@ public class ChessModel implements IChessModel {
     public void setNextPlayer() {
         player = player.next();
     }
-
-
-    /******************************************************************
-     * Places a piece at the specified row and column on the board.
-     * @param row the row being looked at.
-     * @param column the column being looked at.
-     * @param piece the piece in question you want to place at that
-     * location.
-     *****************************************************************/
-    public void setPiece(int row, int column, IChessPiece piece) {
-        board[row][column] = piece;
-    }
-
 
     /******************************************************************
      * Saves the current board and adds it tho the list of
