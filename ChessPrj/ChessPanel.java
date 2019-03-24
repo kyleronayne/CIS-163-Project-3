@@ -596,7 +596,6 @@ public class ChessPanel extends JPanel {
                             }
                 }
                 if(blackTurn == true) {
-                    //FIXME: Here we will call the AI function in Model which should take care of MOVES
                     model.AI();
 
                     displayBoard();

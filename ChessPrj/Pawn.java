@@ -1,5 +1,4 @@
 package ChessPrj;
-//FIXME: en Passant Bug that allows the king to move into check immediately following enPassant
 
 /**********************************************************************
  * Class that represents the Pawn chess piece. Determines whether the
@@ -70,7 +69,6 @@ public class Pawn extends ChessPiece {
                         == null) {
                     validMove = true;
 
-                    //FixME: Why is this here? vvv
                     if (super.isValidMove(move, board)) ;
 
                     // Move was made as a first move
@@ -140,7 +138,7 @@ public class Pawn extends ChessPiece {
                         board[move.fromRow + 2][move.fromColumn]
                                 == null) {
                     validMove = true;
-                    //FixMe: Is this code needed? vvv
+
                     if(super.isValidMove(move, board));
 
                     // Make sure this is noted as the first move
