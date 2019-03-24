@@ -268,7 +268,7 @@ public class King extends ChessPiece {
             // Is this the white player?
             if (this.player() == Player.WHITE) {
                 // Has the king moved yet?
-                if (!WkingMoved) {
+                if ((WkingMoved^BkingMoved) || !(WkingMoved&&BkingMoved)) {
 
                     // Are they attempting a castle from the right?
                     if(move.toColumn == move.fromColumn +2) {
@@ -303,7 +303,7 @@ public class King extends ChessPiece {
             // Is this the black player?
             if (this.player() == Player.BLACK) {
                 // Has the king moved yet?
-                if (!BkingMoved) {
+                if ((WkingMoved^BkingMoved) || !(WkingMoved&&BkingMoved)) {
 
                     // Attempting to castle to the left?
                     if(move.toColumn == move.fromColumn-2)  {

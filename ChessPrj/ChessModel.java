@@ -607,6 +607,14 @@ public class ChessModel implements IChessModel {
         return newPiece;
     }
 
+    /******************************************************************
+     * Saves a copy of a specified chess piece that could be
+     * potentially taken by the checkmate method
+     * @param cp A ChessPiece object that could be potentially taken
+     * by the checkmate method
+     * @return A ChessPiece object representing a chess piece that
+     * could potentially be taken by the checkmate method
+     *****************************************************************/
     public ChessPiece newBPieceGen(IChessPiece cp)  {
         newPiece = null;
         if(cp != null)   {
@@ -730,7 +738,13 @@ public class ChessModel implements IChessModel {
                                         check, revert the move and
                                         replace the piece that was
                                         there*/
-                                        if(!inCheck(Player.WHITE))   {
+                                        if(inCheck(Player.BLACK))   {
+                                            Move m2 = new Move(
+                                                    x,y,r,c);
+                                            move(m2);
+                                            board[x][y] = newPiece;
+                                        }
+                                        else if(!inCheck(Player.WHITE))   {
                                             Move m2 = new Move(
                                                     x,y,r,c);
                                             move(m2);
@@ -778,7 +792,18 @@ public class ChessModel implements IChessModel {
                                         Move m=new Move(r, c, x, y);
                                         if(board[r][c].isValidMove(m,
                                                 board)){
+                                            newPiece = null;
+                                            if(board[x][y] != null) {
+                                                newPiece = newPieceGen(
+                                                        board[x][y]);
+                                            }
                                             move(m);
+                                            if(inCheck(Player.BLACK))   {
+                                                Move m2 = new Move(
+                                                        x,y,r,c);
+                                                move(m2);
+                                                board[x][y] = newPiece;
+                                            }
                                             return;
                                         }
                                     }
@@ -789,8 +814,19 @@ public class ChessModel implements IChessModel {
                                     Move m = new Move(r, c, x, y);
                                     if(board[r][c].
                                             isValidMove(m, board)){
+                                        newPiece = null;
+                                        if(board[x][y] != null) {
+                                            newPiece = newPieceGen(
+                                                    board[x][y]);
+                                        }
                                         move(m);
-                                        return;
+                                        if(inCheck(Player.BLACK))   {
+                                            Move m2 = new Move(
+                                                    x,y,r,c);
+                                            move(m2);
+                                            board[x][y] = newPiece;
+                                        }
+                                        else return;
                                     }
                                 }
                             }
@@ -820,8 +856,19 @@ public class ChessModel implements IChessModel {
                                     Move m = new Move(r, c, x, y);
                                     if(board[r][c].
                                             isValidMove(m, board))  {
+                                        newPiece = null;
+                                        if(board[x][y] != null) {
+                                            newPiece = newPieceGen(
+                                                    board[x][y]);
+                                        }
                                         move(m);
-                                        return;
+                                        if(inCheck(Player.BLACK))   {
+                                            Move m2 = new Move(
+                                                    x,y,r,c);
+                                            move(m2);
+                                            board[x][y] = newPiece;
+                                        }
+                                        else return;
                                     }
                                 }
                             }
@@ -844,8 +891,19 @@ public class ChessModel implements IChessModel {
                                     Move m = new Move(r, c, x, y);
                                     if(board[r][c].
                                             isValidMove(m, board))  {
+                                        newPiece = null;
+                                        if(board[x][y] != null) {
+                                            newPiece = newPieceGen(
+                                                    board[x][y]);
+                                        }
                                         move(m);
-                                        return;
+                                        if(inCheck(Player.BLACK))   {
+                                            Move m2 = new Move(
+                                                    x,y,r,c);
+                                            move(m2);
+                                            board[x][y] = newPiece;
+                                        }
+                                        else return;
                                     }
                                 }
                             }
