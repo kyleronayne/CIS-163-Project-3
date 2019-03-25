@@ -257,7 +257,6 @@ public class ChessModelTest {
     public void test_Pawn_Movement(){
         ChessModel test = new ChessModel();
 
-        /** Black Player movement */
         // 1 space forward
         Move m = new Move(1,1,2,1);
         assertTrue(test.isValidMove(m));
@@ -277,7 +276,6 @@ public class ChessModelTest {
             // Back to the Right?
         m3 = new Move (1,1,0,2);
         assertFalse(test.isValidMove(m3));
-        //cannot move diagonal with no piece there.
 
         // Move white pawn for enPassant
         Move p = new Move (6,0,3,0);
@@ -287,6 +285,16 @@ public class ChessModelTest {
         ((Pawn) test.pieceAt(3,1)).setFirstMove(true);
         p = new Move (3,0,2,1);
         assertTrue(test.isValidMove(p));
+
+        // Test Pawn Capture, Move to other side of the board
+        Move t = new Move (1,5,5,5);
+        test.move(t);
+            // take a pawn on diagonal to right
+        t = new Move(5,5,6,6);
+        assertTrue(test.isValidMove(t));
+            // diagonal to left?
+        t = new Move(5,5,6,4);
+        assertTrue(test.isValidMove(t));
 
     }
 
