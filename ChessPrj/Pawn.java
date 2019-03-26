@@ -155,25 +155,6 @@ public class Pawn extends ChessPiece {
                 }
             }
 
-            // Attempt an enPassant maneuver
-            else if((move.toRow == 5) && (move.toRow == move.fromRow+1)
-                    && ((move.toColumn == move.fromColumn + 1) ||
-                            (move.toColumn == move.fromColumn - 1))) {
-                /* verify that there is a piece next to the current
-                pawn and of the opposite player and is a pawn*/
-                if (board[move.toRow - 1][move.toColumn] != null)
-                    if (board[move.toRow - 1][move.toColumn].player()
-                            == Player.WHITE)
-                        if (board[move.toRow - 1][move.toColumn]
-                                .type().equals("Pawn"))
-                            /* Check if that pawn just made their
-                            first move */
-                            if (((Pawn) board[move.toRow - 1]
-                                    [move.toColumn]).getFirstMove()) {
-                                validMove = true;
-                            }
-            }
-
             // Check if the player is trying to move diagonally
             else if ((move.toRow == move.fromRow + 1) &&
                     ((move.toColumn == move.fromColumn + 1)
@@ -187,6 +168,25 @@ public class Pawn extends ChessPiece {
                         validMove = true;
                 }
                 catch (NullPointerException e) {}
+            }
+
+            // Attempt an enPassant maneuver
+            if((move.toRow == 5) && (move.toRow == move.fromRow+1)
+                    && ((move.toColumn == move.fromColumn + 1) ||
+                    (move.toColumn == move.fromColumn - 1))) {
+                /* verify that there is a piece next to the current
+                pawn and of the opposite player and is a pawn*/
+                if (board[move.toRow - 1][move.toColumn] != null)
+                    if (board[move.toRow - 1][move.toColumn].player()
+                            == Player.WHITE)
+                        if (board[move.toRow - 1][move.toColumn]
+                                .type().equals("Pawn"))
+                            /* Check if that pawn just made their
+                            first move */
+                            if (((Pawn) board[move.toRow - 1]
+                                    [move.toColumn]).getFirstMove()) {
+                                validMove = true;
+                            }
             }
         }
         return validMove&&superValid;

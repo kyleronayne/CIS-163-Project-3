@@ -344,6 +344,10 @@ public class ChessPanel extends JPanel {
         public void actionPerformed(ActionEvent event) {
             for (int i = 0; i < 8; i++)
                 for (int j = 0; j < 8; j++) {
+                    /*Because en Passant is only available immediately
+                    after a pawn does a double jump for its first turn,
+                    at the start of the players next turn we clear all
+                    of the pawn first turn flags*/
                     if (model.pieceAt(i, j) != null)
                         if (model.pieceAt(i, j).player() ==
                                 currentPlayer)
@@ -353,6 +357,11 @@ public class ChessPanel extends JPanel {
                                         setFirstMove(false);
                 }
 
+            /*Handles the undo functionality of the code. Because
+            the WHITE player always goes first, we can assume that if
+            the board is in the starting state, it is the WHITE players
+            turn,. isAtStart is a boolean returned from goToLastBoard
+            the returns if the board is in the starting state or not*/
             if (undo == event.getSource()) {
                 boolean isAtStart = model.goToLastBoard();
                 displayBoard();
@@ -363,6 +372,9 @@ public class ChessPanel extends JPanel {
                 return;
             }
 
+            /*The AI JRadioButton in the initial popup panel.
+            A user cannot select two options, therefore if AI
+            is chosen, 2 player must be unselected*/
             if (onePlayer == event.getSource()) {
                 if (twoPlayer.isSelected())
                     twoPlayer.setSelected(false);
@@ -373,6 +385,10 @@ public class ChessPanel extends JPanel {
                 return;
             }
 
+            /*The 2 player JRadioButton in the initial popup panel.
+            A user cannot select two options, however no options is
+            a valid choice. In the case of no options, the 2 player
+            mode is selected*/
             if (twoPlayer == event.getSource()) {
                 if (onePlayer.isSelected())
                     onePlayer.setSelected(false);
@@ -383,11 +399,23 @@ public class ChessPanel extends JPanel {
                     model.useAI(false);
                 return;
             }
+
+            /*This is the panel logic for what needs to happen if 2
+            player mode is engaged*/
             if(!model.AIisUsed())    {
                 for (int r = 0; r < model.numRows(); r++)
                     for (int c = 0; c < model.numColumns(); c++)
+
+                        /*loops through all of the JButtons in the array
+                        * to determine which one was pressed*/
                         if (board[r][c] == event.getSource()) {
+                            /*if the first turn flag is true, it is in
+                            "piece select" mode*/
                             if (firstTurnFlag) {
+                                /*If the piece the user selected is a
+                                piece and is the currentplayer's piece
+                                it is selected, otherwise nothing
+                                happens*/
                                 if (model.pieceAt(r, c) != null) {
                                     if (model.pieceAt(r, c).player() ==
                                             currentPlayer) {
@@ -396,82 +424,210 @@ public class ChessPanel extends JPanel {
                                         firstTurnFlag = false;
                                     }
                                 }
-                            } else {
+                            }
+                            /*If the player has already selected their
+                            piece, the second click will be where they
+                            want to move to*/
+                            else {
                                 toRow = r;
                                 toCol = c;
+                                /*Once they've selected where they want
+                                to go, we know the next tile will be
+                                the "piece select" turn again*/
                                 firstTurnFlag = true;
-                                Move m = new Move(fromRow, fromCol, toRow, toCol);
-                                if ((model.isValidMove(m)) == true) {
-                                    if (model.pieceAt(fromRow, fromCol) != null) {
-                                        if (model.pieceAt(fromRow, fromCol).player() == Player.WHITE) {
+
+                                /*Generate a new move based on the
+                                user input*/
+                                Move m = new Move(fromRow, fromCol,
+                                        toRow, toCol);
+
+                                /*Next, check to make sure the move is
+                                valid for the game/piece*/
+                                if ((model.isValidMove(m))) {
+
+                                    /*If the piece at the starting loc.
+                                    is not a real piece, nothing should
+                                    happen*/
+                                    if (model.pieceAt(fromRow, fromCol)
+                                            != null) {
+
+                                        /*Checks to see if enPassant
+                                        is being attempted by WHITE
+                                        team*/
+                                        if (model.pieceAt(fromRow,
+                                                fromCol).player() ==
+                                                Player.WHITE) {
+
+                                            /*The movement that would
+                                            be enPassant*/
                                             if ((toRow == 2) && (toRow == fromRow - 1) &&
                                                     ((toCol == fromCol + 1) ||
                                                             (toCol == fromCol - 1))) {
-                                                //if enPassant is legal
-                                                if (model.pieceAt(toRow + 1, toCol) != null)    {
-                                                    if (model.pieceAt(toRow + 1, toCol).type().equals("Pawn"))
-                                                        if (((Pawn) model.pieceAt(toRow + 1, toCol)).getFirstMove()) {
-                                                            en_passant = true;
-                                                            Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
+                                                /*checks to see if this
+                                                movement is legal (this
+                                                is also checked in
+                                                model)*/
+                                                if (model.pieceAt(
+                                                        toRow + 1,
+                                                        toCol)!=null){
+
+                                                    if (model.pieceAt(
+                                                            toRow + 1,
+                                                            toCol).
+                                                            type().
+                                                            equals(
+                                                              "Pawn"))
+                                                    /*Make sure this
+                                                    was the captured
+                                                    pawns first move*/
+                                                    if (((Pawn)
+                                                        model.
+                                                        pieceAt(
+                                                        toRow+1,
+                                                        toCol))
+                                                        .getFirstMove(
+                                                        )){
+                                                        /*This handles
+                                                        the sideways
+                                                        move for en
+                                                        passant*/
+                                                            en_passant
+                                                                = true;
+                                                            Move
+                                                            enPassant =
+                                                            new Move(
+                                                               fromRow,
+                                                               fromCol,
+                                                               fromRow,
+                                                                toCol);
                                                             model.saveBoard();
                                                             model.move(enPassant);
                                                             m = new Move(fromRow, toCol, toRow, toCol);
-                                                        }
+                                                    }
                                             }
                                             }
                                         }
-                                        else if (model.pieceAt(fromRow, fromCol) != null) {
-                                            if (model.pieceAt(fromRow, fromCol).player() == Player.BLACK) {
-                                                if ((toRow == 5) && (toRow == fromRow + 1) &&
-                                                        ((toCol == fromCol + 1) ||
-                                                                (toCol == fromCol - 1))) {
-                                                    //if enPassant is legal
-                                                    if(model.pieceAt(toRow-1, toCol) != null) {
-                                                        if (model.pieceAt(toRow - 1, toCol).type().equals("Pawn"))
-                                                            if (((Pawn) model.pieceAt(toRow - 1, toCol)).getFirstMove()) {
-                                                                en_passant = true;
-                                                                Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
-                                                                model.saveBoard();
-                                                                model.move(enPassant);
-                                                                m = new Move(fromRow, toCol, toRow, toCol);
+
+                                        /*performs the same enPassant
+                                        check for the BLACK team*/
+                                        else if (model.pieceAt(fromRow,
+                                                fromCol) != null) {
+                                            if (model.pieceAt(fromRow,
+                                                    fromCol).player()
+                                                    == Player.BLACK) {
+                                                if ((toRow == 5) &&
+                                                        (toRow==fromRow
+                                                                +1) &&
+                                                        ((toCol==
+                                                            fromCol+1)
+                                                            ||(toCol ==
+                                                                fromCol
+                                                                -1))) {
+                                                    /*if enPassant is
+                                                    legal*/
+                                                    if(model.pieceAt
+                                                        (toRow-1,
+                                                            toCol)!=
+                                                            null) {
+                                                        if (model.
+                                                        pieceAt(
+                                                        toRow - 1,
+                                                        toCol).
+                                                        type().
+                                                        equals(
+                                                         "Pawn"))
+                                                        if (((Pawn)
+                                                          model.
+                                                          pieceAt(
+                                                          toRow-1,
+                                                          toCol)).
+                                                          getFirstMove(
+                                                          )) {
+                                                            en_passant
+                                                                = true;
+                                                            Move
+                                                              enPassant
+                                                              =new Move
+                                                              (fromRow,
+                                                              fromCol,
+                                                              fromRow,
+                                                              toCol);
+                                                            model.
+                                                            saveBoard(
+                                                            );
+                                                            model.
+                                                            move(
+                                                            enPassant);
+                                                            m = new
+                                                            Move(
+                                                            fromRow,
+                                                            toCol,
+                                                            toRow,
+                                                            toCol);
                                                             }
                                                     }
                                                 }
                                             }
                                         }
                                     }
+                                    /*Save the previous row and column
+                                    in case the move needs to be
+                                    reverted*/
                                     int OgCol = fromCol;
                                     int OgRow = fromRow;
+                                    /*As long as en passant
+                                    isn't being attempted, save the
+                                    board*/
                                     if (!en_passant)
                                         model.saveBoard();
+                                    /*make the specified move*/
                                     model.move(m);
                                     en_passant = false;
                                     boolean KingCastled = false;
-                                    if (model.pieceAt(r, c).type().equals("King")) {
-                                        if (currentPlayer == Player.WHITE) {
+
+                                    /*next, check to see if castling
+                                    is happening*/
+                                    if (model.pieceAt(r, c).type().
+                                            equals("King")) {
+                                        if (currentPlayer ==
+                                                Player.WHITE) {
+                                            /*Check white castling
+                                            to the LEFT*/
                                             if (toCol == fromCol - 2) {
                                                 Move leftRookMove =
-                                                        new Move(7, 0, 7, 3);
-                                                model.move(leftRookMove);
+                                                        new Move(7,0,
+                                                                7, 3);
+                                                model.move(
+                                                    leftRookMove);
                                                 KingCastled = true;
                                             }
 
+                                            /*Check white castling
+                                            to the RIGHT*/
                                             if (toCol == fromCol + 2) {
                                                 Move rightRookMove =
-                                                        new Move(7, 7, 7, 5);
-                                                model.move(rightRookMove);
+                                                        new Move(7, 7,
+                                                                7, 5);
+                                                model.move(
+                                                    rightRookMove);
                                                 KingCastled = true;
                                             }
                                         }
 
-                                        if (currentPlayer == Player.BLACK) {
+                                        if (currentPlayer ==
+                                                Player.BLACK) {
+                                            /*Check black castling to
+                                             the LEFT*/
                                             if (toCol == fromCol - 2) {
                                                 Move leftRookMove =
-                                                        new Move(0, 0, 0, 3);
+                                                        new Move(0, 0,
+                                                                0, 3);
                                                 model.move(leftRookMove);
                                                 KingCastled = true;
                                             }
 
+                                            /*Check black castling to
+                                            the RIGHT*/
                                             if (toCol == fromCol + 2) {
                                                 Move rightRookMove =
                                                         new Move(0, 7, 0, 5);
@@ -481,26 +637,42 @@ public class ChessPanel extends JPanel {
                                         }
                                     }
 
-                                    if (model.inCheck(currentPlayer) && !KingCastled) {
-                                        Move newM = new Move(toRow, toCol, OgRow, OgCol);
+                                    /*This undoes a move that puts the
+                                    king into check*/
+                                    if (model.inCheck(currentPlayer)
+                                            && !KingCastled) {
+                                        Move newM = new Move(toRow,
+                                                toCol, OgRow, OgCol);
                                         model.move(newM);
                                         return;
                                     }
-                                    KingCastled = false;
 
+                                    /*After the moves have been made,
+                                    display the board*/
                                     displayBoard();
+
+                                    /*Switch to the next players turn*/
                                     currentPlayer = currentPlayer.next();
+
+                                    /*If the next player is in check or
+                                    is checkmated, send a popup to the
+                                    user*/
                                     if (model.inCheck(currentPlayer)) {
                                         if (model.isComplete()) {
-                                            JOptionPane.showMessageDialog(null,
+                                            JOptionPane.
+                                                showMessageDialog(null,
                                                     currentPlayer +
-                                                            " Has been CHECKMATED!\n" +
-                                                            "GAME OVER!");
+                                                        " Has been " +
+                                                        "CHECKMATED!"+
+                                                        "\nGAME OVER");
                                         } else {
-                                            JOptionPane.showMessageDialog(null,
-                                                    currentPlayer +
-                                                            " Is In Check!\n" +
-                                                            "Next move must get out of check!");
+                                            JOptionPane.
+                                                showMessageDialog(null,
+                                                currentPlayer +
+                                                    " Is In Check!\n" +
+                                                    "Next move must " +
+                                                    "get out of " +
+                                                        "check!");
                                         }
                                     }
 
@@ -508,15 +680,23 @@ public class ChessPanel extends JPanel {
                             }
                         }
             }
+
+            /*This handles the panel class for the AI being used*/
             else if(model.AIisUsed())   {
+                /*Black turn flag allows the computer to know when
+                it is the AIs turn*/
                 boolean blackTurn = false;
                 if(currentPlayer == Player.WHITE) {
                     for (int r = 0; r < model.numRows(); r++)
                         for (int c = 0; c < model.numColumns(); c++)
                             if (board[r][c] == event.getSource()) {
                                 if (firstTurnFlag) {
+                                    /*If the player doesn't click on
+                                    a valid piece, nothing
+                                    will happen*/
                                     if (model.pieceAt(r, c) != null) {
-                                        if (model.pieceAt(r, c).player() == currentPlayer) {
+                                        if (model.pieceAt(r,c).player()
+                                                == currentPlayer) {
                                             fromRow = r;
                                             fromCol = c;
                                             firstTurnFlag = false;
@@ -525,30 +705,76 @@ public class ChessPanel extends JPanel {
                                         else return;
                                     }
                                     else return;
-                                } else {
+                                }
+                                /*If the player has already chosen a
+                                piece*/
+                                else {
                                     toRow = r;
                                     toCol = c;
                                     firstTurnFlag = true;
-                                    Move m = new Move(fromRow, fromCol, toRow, toCol);
+
+                                    /*Create a new move*/
+                                    Move m = new Move(fromRow, fromCol,
+                                            toRow, toCol);
+
+                                    /*Check if the move is valid*/
                                     if ((model.isValidMove(m))) {
-                                        if (model.pieceAt(fromRow, fromCol) != null) {
-                                            if ((toRow == 2) && (toRow == fromRow - 1) &&
-                                                    ((toCol == fromCol + 1) ||
-                                                            (toCol == fromCol - 1))) {
-                                                //if enPassant is legal
-                                                if (model.pieceAt(toRow + 1, toCol) != null) {
-                                                    if (model.pieceAt(toRow + 1, toCol).type().equals("Pawn")) {
-                                                        if (((Pawn) model.pieceAt(toRow + 1, toCol)).getFirstMove()) {
-                                                            en_passant = true;
-                                                            Move enPassant = new Move(fromRow, fromCol, fromRow, toCol);
-                                                            model.saveBoard();
-                                                            model.move(enPassant);
-                                                            m = new Move(fromRow, toCol, toRow, toCol);
+                                        if (model.pieceAt(fromRow,
+                                                fromCol) != null) {
+                                            /*Check to see if enPassant
+                                            is being attempted*/
+                                            if ((toRow == 2) &&
+                                                    (toRow==fromRow-1)
+                                                    &&((toCol==fromCol
+                                                    + 1)||(toCol ==
+                                                    fromCol - 1))) {
+                                                /*Check if enPassant
+                                                 is legal*/
+                                                if (model.pieceAt(toRow
+                                                        +1,toCol) !=
+                                                        null) {
+                                                    if (model.pieceAt(
+                                                            toRow + 1,
+                                                            toCol).
+                                                            type().
+                                                            equals(
+                                                            "Pawn")){
+                                                    if (((Pawn)
+                                                        model.
+                                                        pieceAt(
+                                                        toRow+1,
+                                                        toCol))
+                                                        .getFirstMove(
+                                                        )){
+                                                        en_passant =
+                                                                true;
+                                                            Move
+                                                            enPassant=
+                                                            new Move(
+                                                            fromRow,
+                                                            fromCol,
+                                                            fromRow,
+                                                            toCol);
+                                                            model.
+                                                            saveBoard(
+                                                            );
+                                                            model.
+                                                            move(
+                                                            enPassant);
+                                                            m = new
+                                                            Move(
+                                                            fromRow,
+                                                            toCol,
+                                                            toRow,
+                                                            toCol);
                                                         }
                                                     }
                                                 }
                                             }
                                         }
+                                        /*Save the starting location
+                                        in case the move needs to be
+                                        reverted*/
                                         int OgCol = fromCol;
                                         int OgRow = fromRow;
                                         if (!en_passant)
@@ -556,57 +782,124 @@ public class ChessPanel extends JPanel {
                                         model.move(m);
                                         en_passant = false;
 
-                                        if (model.pieceAt(r, c).type().equals("King")) {
-                                            if (currentPlayer == Player.WHITE) {
-                                                if (toCol == fromCol - 2) {
-                                                    Move leftRookMove = new Move(7, 0, 7, 3);
-                                                    model.move(leftRookMove);
+                                        /*Check to see if castling is
+                                        being attempted*/
+                                        if (model.pieceAt(r, c).type().
+                                                equals("King")) {
+                                            if (currentPlayer ==
+                                                    Player.WHITE) {
+                                                /*Check for LEFT
+                                                castling*/
+                                                if (toCol==fromCol-2) {
+                                                    Move leftRookMove=
+                                                        new Move(7, 0,
+                                                                7, 3);
+                                                    model.move(
+                                                        leftRookMove);
                                                 }
-                                                if (toCol == fromCol + 2) {
-                                                    Move rightRookMove = new Move(7, 7, 7, 5);
-                                                    model.move(rightRookMove);
+                                                /*Check for RIGHT
+                                                castling*/
+                                                if (toCol==fromCol+2){
+                                                    Move rightRookMove
+                                                        =new Move(7, 7,
+                                                            7, 5);
+                                                    model.move(
+                                                        rightRookMove);
                                                 }
                                             }
                                         }
 
+                                        /*If the move puts the player
+                                        into check, it must be
+                                        undone*/
                                         if (model.inCheck(currentPlayer)) {
                                             Move newM = new Move(toRow, toCol, OgRow, OgCol);
                                             model.move(newM);
                                             return;
                                         }
 
+                                        /*Display the new board*/
                                         displayBoard();
-                                        currentPlayer = currentPlayer.next();
-                                        if (model.inCheck(currentPlayer)) {
+
+                                        /*Make it the next players
+                                        turn*/
+                                        currentPlayer = currentPlayer.
+                                                next();
+
+                                        /*If the new player is in check
+                                        or in checkmate, a popup will
+                                        appear with the message*/
+                                        if (model.inCheck(
+                                                currentPlayer)) {
                                             if (model.isComplete()) {
-                                                JOptionPane.showMessageDialog(null, currentPlayer + " Has been CHECKMATED!\n" +
+                                                JOptionPane.
+                                                    showMessageDialog(
+                                                        null,
+                                                        currentPlayer +
+                                                        " Has been " +
+                                                        "CHECKMATED\n"+
                                                         "GAME OVER!");
-                                            } else {
-                                                JOptionPane.showMessageDialog(null, currentPlayer +
-                                                        " Is in Check!\n" + "Next move must get out of check!");
+                                            }
+                                            /*If the user is not
+                                            checkmated, but they're
+                                            in check*/
+                                            else {
+                                                JOptionPane.
+                                                    showMessageDialog(
+                                                        null,
+                                                        currentPlayer +
+                                                        " Is in Check!\n"
+                                                        + "Next move " +
+                                                        "must get "+
+                                                        "out of "+
+                                                        "check!");
                                             }
                                         }
                                     }
+                                    /*If the move that the user made
+                                    is not valid, make it so they must
+                                    pick another pice to move*/
                                     else    {
                                         firstTurnFlag = true;
                                         return;
                                     }
+
+                                    /*If the white team successfully
+                                    made a move, set this flag so the
+                                    computer knows that it can move*/
                                     blackTurn = true;
                                 }
                             }
                 }
+
+                /*If it's the AIs turn*/
                 if(blackTurn == true) {
+
+                    /*This calls the AI method, which takes care of all
+                    AI movement*/
                     model.AI();
 
+                    /*Once the AI has made its move, display the board
+                    and send out any required messages*/
                     displayBoard();
+
+                    /*Set the next player*/
                     currentPlayer = currentPlayer.next();
+
+                    /*If in check or checkmated, output the correct
+                    message*/
                     if (model.inCheck(currentPlayer)) {
                         if (model.isComplete()) {
-                            JOptionPane.showMessageDialog(null, currentPlayer + " Has been CHECKMATED!\n" +
+                            JOptionPane.showMessageDialog(null,
+                                    currentPlayer + " Has been "+
+                                    "CHECKMATED!\n" +
                                     "GAME OVER!");
                         } else {
-                            JOptionPane.showMessageDialog(null, currentPlayer +
-                                    " Is in Check!\n" + "Next move must get out of check!");
+                            JOptionPane.showMessageDialog(null,
+                                    currentPlayer +
+                                    " Is in Check!\n" +
+                                    "Next move must get out " +
+                                    "of check!");
                         }
                     }
                 }

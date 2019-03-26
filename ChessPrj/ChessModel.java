@@ -1,4 +1,5 @@
 package ChessPrj;
+import javax.swing.*;
 import java.util.ArrayList;
 
 /**********************************************************************
@@ -8,6 +9,8 @@ import java.util.ArrayList;
  * Places the pieces on the board.
  * Saves a history of the board that can be undone.
  * and Houses the AI for when playing against the computer.
+ * @author: Charlie Dorn, Kyle Ronayne, Brad Samack
+ * @version Winter 2019 CIS 163 v1.0
  *********************************************************************/
 public class ChessModel implements IChessModel {
 
@@ -222,6 +225,10 @@ public class ChessModel implements IChessModel {
                             kingCol = c;
 
                         }
+
+        if(kingRow==-3 && kingCol==-1)  {
+            JOptionPane.showMessageDialog(null, "BLACK King has been CAPTURED!");
+        }
 
         /* Loop through all the rows and columns and determine if
          the other player is allowed to move to the current players
